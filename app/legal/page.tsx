@@ -79,7 +79,7 @@ export default function Page() {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-2">6. Your Rights</h2>
         <p>
-          You have the right to access, update, or delete your personal information at any time. If you wish to exercise these rights, or if you have any concerns about your data, please contact us at <a href="mailto:privacy@uniq.com" className="text-blue-600 underline">privacy@uniq.com</a>.
+          You have the right to access, update, or delete your personal information at any time. If you wish to exercise these rights, or if you have any concerns about your data, please contact us at <a href="mailto:softeng310project@gmail.com" className="text-blue-600 underline">softeng310project@gmail.com</a>.
         </p>
       </section>
       <section className="mb-8">
