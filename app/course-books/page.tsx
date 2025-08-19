@@ -24,8 +24,11 @@ export default function CourseBooks() {
     "Price, high to low",
   ];
 
+  const conditions = ["New", "Used"];
+
   const [selectedMajors, setSelectedMajors] = React.useState<string[]>([
   ]);
+  const [selectedConditions, setSelectedConditions] = React.useState<string[]>([]);
   const [sortOpen, setSortOpen] = React.useState(false);
   const [sortBy, setSortBy] = React.useState(sortOptions[0]);
 
@@ -34,6 +37,14 @@ export default function CourseBooks() {
       prev.includes(major)
         ? prev.filter((m) => m !== major)
         : [...prev, major]
+    );
+  };
+
+  const toggleCondition = (condition: string) => {
+    setSelectedConditions((prev) =>
+      prev.includes(condition)
+        ? prev.filter((c) => c !== condition)
+        : [...prev, condition]
     );
   };
 
@@ -88,6 +99,7 @@ export default function CourseBooks() {
                     type="checkbox"
                     checked={selectedMajors.includes(major)}
                     onChange={() => toggleMajor(major)}
+                    className="h-6 w-6 text-blue-600 border-gray-400 border rounded checked:bg-blue-400 checked:border-blue-400 appearance-none"
                   />
                   <span>{major}</span>
                 </label>
@@ -97,14 +109,19 @@ export default function CourseBooks() {
 
           <div>
             <h2 className="font-semibold mb-2">Condition</h2>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>New</span>
-            </label>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>Used</span>
-            </label>
+            <div className="space-y-1">
+              {conditions.map((condition) => (
+                <label key={condition} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedConditions.includes(condition)}
+                    onChange={() => toggleCondition(condition)}
+                    className="h-6 w-6 text-blue-600 border-gray-400 border rounded checked:bg-blue-400 checked:border-blue-400 appearance-none"
+                  />
+                  <span>{condition}</span>
+                </label>
+              ))}
+            </div>
           </div>
         </aside>
 
