@@ -11,7 +11,7 @@ export default function Footer() {
             <div className="font-bold text-lg text-[#333] mb-2">About us</div>
             <ul className="space-y-1">
               <li><a href="/about" className="text-[#385684] hover:text-[#27406a] transition-colors">About us</a></li>
-              <li><a href="#" className="text-[#385684] hover:text-[#27406a] transition-colors">Legal</a></li>
+              <li><a href="/legal" className="text-[#385684] hover:text-[#27406a] transition-colors">Legal</a></li>
             </ul>
           </div>
           {/* Customer Service */}
