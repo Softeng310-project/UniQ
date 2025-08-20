@@ -21,15 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen bg-gray-50">
-          <Navbar />
-          {children}
-          {/* Margin is to show space for New Arrivals section, can delete. */}
-          <div className="mt-64">
-          <PopCollections />
-          </div>
-          <Footer />
-        </div>
+        <main>{children}</main>
       </body>
     </html>
   )

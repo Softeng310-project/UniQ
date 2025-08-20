@@ -1,11 +1,16 @@
 import Navbar from '@/components/Navbar'
 import PopCollections from '@/components/PopCollections'
+import Footer from '@/components/Footer'
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold">Home Page</h1>
-      <p>This is the home page content.</p>
+    <div className="home">
+      <Navbar />
+      <div className="mt-64">
+        <h1>New Arrivals</h1>
+      </div>
+      <PopCollections />
+      <Footer />
     </div>
   )
 }
