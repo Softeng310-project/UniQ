@@ -95,7 +95,11 @@ To accodomate all our wonderful contributors and their different skill levels, w
 
 To keep this requirement simple, we have decided to make use of **Sonar** (SonarLint, SonarQube, and SonarCloud) to make sure our codebase adheres to conventional code styles. Thus, please make sure you are using SonarLint within your desired IDE while making contributions.
 
-### 2. Documentation
+### 2. Code Vulnerabilities.
+
+To make sure that UniQ has as little vulnerabilities within it as possible, all contributors are required to be using Snyk within their desired IDEs. These should be available as simple plugins on these IDEs; JetBrains IDEs, Visual Studio, VS Code, Eclipse.
+
+### 3. Documentation
 
 If any changes you made to the codebase causes the project's behaviour to change, you are required to document this behaviour in the **[README.md](README.md)** file.
 
