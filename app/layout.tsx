@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar'
+import PopCollections from '@/components/PopCollections'
 import Footer from '@/components/Footer'
 import CourseBooks from './course-books/page'
 
@@ -22,8 +23,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-50">
           <Navbar />
-          {/* {children} */}
-          <CourseBooks />
+          {children}
+          {/* Margin is to show space for New Arrivals section, can delete. */}
+          <div className="mt-64">
+          <PopCollections />
+          </div>
           <Footer />
         </div>
       </body>
