@@ -12,6 +12,9 @@ module.exports = {
         'uniq-light-blue': '#3b82f6',
         'uniq-dark': '#1f2937',
       },
+      fontFamily: {
+        'mandali': ['Mandali', 'sans-serif'],
+      },
     },
   },
   plugins: [],

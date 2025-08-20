@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import PopCollections from '@/components/PopCollections'
 import Footer from '@/components/Footer'
+import CourseBooks from './course-books/page'
 
 const inter = Inter({ subsets: ['latin'] })
 
