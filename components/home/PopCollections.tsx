@@ -17,14 +17,14 @@ export function Title() {
 
 export function Collections() {
   const items = [
-    { src: "/assets/WritingSupplies.png", alt: "Writing Supplies" },
-    { src: "/assets/CourseBooks.png", alt: "Course Books" },
-    { src: "/assets/ArtSupplies.png", alt: "Art Supplies" },
-    { src: "/assets/Notebooks.png", alt: "Notebooks & Pads" },
-    { src: "/assets/Calculators.png", alt: "Calculators" },
-    { src: "/assets/Erasers.png", alt: "Erasers" },
-    { src: "/assets/Rulers.png", alt: "Rulers" },
-    { src: "/assets/Scissors.png", alt: "Scissors" },
+    { src: "/assets/WritingSupplies.webp", alt: "Writing Supplies" },
+    { src: "/assets/CourseBooks.webp", alt: "Course Books" },
+    { src: "/assets/ArtSupplies.webp", alt: "Art Supplies" },
+    { src: "/assets/Notebooks.webp", alt: "Notebooks & Pads" },
+    { src: "/assets/Calculators.webp", alt: "Calculators" },
+    { src: "/assets/Erasers.webp", alt: "Erasers" },
+    { src: "/assets/Rulers.webp", alt: "Rulers" },
+    { src: "/assets/Scissors.webp", alt: "Scissors" },
   ];
 
   return (
