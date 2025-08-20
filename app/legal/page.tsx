@@ -1,4 +1,4 @@
-import LegalPage from '@/components/legalPage'
+import LegalPage from '@/components/legal/legalPage'
 
 export default function Legal() {
   return (
