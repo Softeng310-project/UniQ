@@ -69,7 +69,7 @@ export function TopBar() {
       <div className="absolute left-1/2 -translate-x-1/2">
         <Link href="/" passHref>
           <Image
-            src="/assets/UniQ.png"
+            src="/assets/UniQ.webp"
             alt="UniQ Logo"
             width={100}
             height={100}
