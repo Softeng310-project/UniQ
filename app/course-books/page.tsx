@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use } from "react";
+import React from "react";
 
 export default function CourseBooks() {
   const majors = [
@@ -131,6 +131,23 @@ export default function CourseBooks() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
+  // Handle keyboard navigation for sort dropdown
+  const handleSortKeyDown = (event: React.KeyboardEvent, option: string) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setSortBy(option);
+      setSortOpen(false);
+    }
+  };
+
+  // Handle keyboard navigation for sort button
+  const handleSortButtonKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setSortOpen((prev) => !prev);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
@@ -147,12 +164,17 @@ export default function CourseBooks() {
           <button
             className="border border-gray-300 px-4 py-2 rounded bg-white shadow-sm flex items-center gap-2"
             onClick={() => setSortOpen((prev) => !prev)}
+            onKeyDown={handleSortButtonKeyDown}
+            aria-haspopup="listbox"
+            aria-expanded={sortOpen}
+            aria-label="Sort books by"
           >
             Sort By: {sortBy}
             <svg 
               className="w-4 h-4 ml-1 text-gray-500"
               fill="currentColor" 
               viewBox="0 0 20 20"
+              aria-hidden="true"
             >
               {sortOpen ? (
                 <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -161,24 +183,29 @@ export default function CourseBooks() {
               )}
             </svg>
           </button>
-          <ul className={`absolute right-0 w-full bg-white border border-gray-300 shadow-lg z-50 transition-all duration-200 ease-in-out transform origin-top ${
-            sortOpen 
-              ? 'opacity-100 scale-y-100' 
-              : 'opacity-0 scale-y-0 pointer-events-none'
-          }`}>
+          <div 
+            className={`absolute right-0 w-full bg-white border border-gray-300 shadow-lg z-50 transition-all duration-200 ease-in-out transform origin-top ${
+              sortOpen 
+                ? 'opacity-100 scale-y-100' 
+                : 'opacity-0 scale-y-0 pointer-events-none'
+            }`}
+          >
               {sortOptions.map((option) => (
-                <li
+                <button
                   key={option}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  type="button"
+                  className="w-full px-4 py-2 hover:bg-gray-100 cursor-pointer focus:bg-gray-100 focus:outline-none text-left"
                   onClick={() => {
                     setSortBy(option);
                     setSortOpen(false);
                   }}
+                  onKeyDown={(e) => handleSortKeyDown(e, option)}
+                  tabIndex={sortOpen ? 0 : -1}
                 >
                   {option}
-                </li>
-              ))}
-            </ul>
+                </button>
+                              ))}
+            </div>
         </div>
       </div>
 
@@ -195,7 +222,8 @@ export default function CourseBooks() {
                     type="checkbox"
                     checked={selectedMajors.includes(major)}
                     onChange={() => toggleMajor(major)}
-                    className="h-6 w-6 text-blue-600 border-gray-400 border rounded checked:bg-blue-400 checked:border-blue-400 appearance-none"
+                    className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
+                    aria-label={`Filter by ${major} major`}
                   />
                   <span className="text-[#556C8E] font-mandali">{major}</span>
                 </label>
@@ -212,7 +240,8 @@ export default function CourseBooks() {
                     type="checkbox"
                     checked={selectedConditions.includes(condition)}
                     onChange={() => toggleCondition(condition)}
-                    className="h-6 w-6 text-blue-600 border-gray-400 border rounded checked:bg-blue-400 checked:border-blue-400 appearance-none"
+                    className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
+                    aria-label={`Filter by ${condition} condition`}
                   />
                   <span className="text-[#556C8E] font-mandali">{condition}</span>
                 </label>
@@ -227,9 +256,14 @@ export default function CourseBooks() {
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {currentBooks.map((book) => (
-              <div
+              <button
                 key={book.id}
-                className="bg-white cursor-pointer"
+                className="bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={() => {
+                  // TODO: Navigate to book detail page
+                  console.log('Navigate to book:', book.id);
+                }}
+                aria-label={`View details for ${book.title} by ${book.author}`}
               >
                 <div className="h-48 bg-gray-200 rounded flex items-center justify-center">
                   <span className="text-gray-500 text-sm">Book Cover</span>
@@ -239,24 +273,23 @@ export default function CourseBooks() {
                   <p className="text-gray-600 text-xs mb-2">{book.author}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 font-semibold">${book.price}</span>
-                    <span className={`text-xs px-2 py-1 rounded ${
-                      book.condition === 'New' ? 'bg-gray-100 text-gray-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
+                    <span className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-800">
                       {book.condition}
                     </span>
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center mt-8 space-x-2">
+            <nav className="flex justify-center items-center mt-8 space-x-2" aria-label="Pagination">
               <button
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="px-3 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Go to previous page"
               >
                 Previous
               </button>
@@ -265,11 +298,13 @@ export default function CourseBooks() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`px-3 py-2 border rounded ${
+                  className={`px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     currentPage === page
                       ? 'bg-blue-600 text-white border-blue-600'
                       : 'border-gray-300 hover:bg-gray-50'
                   }`}
+                  aria-label={`Go to page ${page}`}
+                  aria-current={currentPage === page ? 'page' : undefined}
                 >
                   {page}
                 </button>
@@ -278,11 +313,12 @@ export default function CourseBooks() {
               <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                className="px-3 py-2 border border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Go to next page"
               >
                 Next
               </button>
-            </div>
+            </nav>
           )}
         </main>
       </div>
