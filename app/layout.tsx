@@ -2,7 +2,6 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Navbar from '@/components/common/Navbar'
-import PopCollections from '@/components/home/PopCollections'
 import Footer from '@/components/common/Footer'
 import CourseBooks from './course-books/page'
 
@@ -21,7 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main>{children}</main>
+        <div className="min-h-screen bg-gray-50">
+          <header className="sticky top-0 z-50">
+            <Navbar />
+          </header>
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   )
