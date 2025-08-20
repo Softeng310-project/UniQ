@@ -1,6 +1,6 @@
-import Navbar from '@/components/Navbar'
-import PopCollections from '@/components/PopCollections'
-import Footer from '@/components/Footer'
+import Navbar from '@/components/common/Navbar'
+import PopCollections from '@/components/home/PopCollections'
+import Footer from '@/components/common/Footer'
 
 export default function Home() {
   return (
