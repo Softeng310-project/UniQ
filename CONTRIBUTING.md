@@ -97,7 +97,7 @@ To keep this requirement simple, we have decided to make use of **Sonar** (Sonar
 
 ### 2. Code Vulnerabilities.
 
-To make sure that UniQ has as little vulnerabilities within it as possible, all contributors are required to be using Snyk within their desired IDEs. These should be available as simple plugins on these IDEs; JetBrains IDEs, Visual Studio, VS Code, Eclipse.
+To make sure that UniQ has as little vulnerabilities within it as possible, all contributors are required to be using **Snyk** within their desired IDEs. These should be available as simple plugins on these IDEs; JetBrains IDEs, Visual Studio, VS Code, Eclipse.
 
 ### 3. Documentation
 
