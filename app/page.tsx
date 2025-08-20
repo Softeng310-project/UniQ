@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import PopCollections from '@/components/PopCollections'
 
 export default function Home() {
   return (
