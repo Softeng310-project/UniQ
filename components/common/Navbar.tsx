@@ -1,8 +1,7 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import { MdAccountCircle, MdOutlineShoppingCart , MdClose } from "react-icons/md";
-import { MdOutlineSearch } from "react-icons/md";
+import { MdAccountCircle, MdOutlineShoppingCart , MdClose, MdOutlineSearch } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
