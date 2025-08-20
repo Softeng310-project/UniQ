@@ -1,3 +1,5 @@
+import { MdEmail } from "react-icons/md";
+
 export default function Footer() {
   return (
     <footer className="w-full mt-12">
@@ -18,7 +20,12 @@ export default function Footer() {
           <div className="flex-1 text-center md:text-left">
             <div className="font-bold text-lg text-[#333] mb-2">Customer service</div>
             <ul className="space-y-1">
-              <li><a href="#" className="text-[#385684] hover:text-[#27406a] transition-colors">Contact us</a></li>
+              <li><a 
+              href="#" 
+              className="flex items-center gap-1 text-[#385684] hover:text-[#27406a] transition-colors">
+                <MdEmail size={18} />
+                Contact us
+                </a></li>
             </ul>
           </div>
           {/* My Account */}
