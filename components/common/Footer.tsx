@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-8">
           {/* About Us */}
           <div className="flex-1 text-center md:text-left">
-            <div className="font-bold text-lg text-[#333] mb-2">About us</div>
+            <div className="font-bold text-lg text-[#333] mb-2">About Us</div>
             <ul className="space-y-1">
               <li><a href="/about" className="flex items-center gap-1 text-[#385684] hover:text-[#27406a] transition-colors">
               <MdInfoOutline size={18} />
@@ -22,7 +22,7 @@ export default function Footer() {
           </div>
           {/* Customer Service */}
           <div className="flex-1 text-center md:text-left">
-            <div className="font-bold text-lg text-[#333] mb-2">Customer service</div>
+            <div className="font-bold text-lg text-[#333] mb-2">Customer Service</div>
             <ul className="space-y-1">
               <li>
                 <div className="flex items-center gap-1">
@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
           {/* My Account */}
           <div className="flex-1 text-center md:text-left">
-            <div className="font-bold text-lg text-[#333] mb-2">My account</div>
+            <div className="font-bold text-lg text-[#333] mb-2">My Account</div>
             <ul className="space-y-1">
               <li><a href="#" className="flex items-center gap-1 text-[#385684] hover:text-[#27406a] transition-colors">
                 <MdAccountCircle size={18} />
