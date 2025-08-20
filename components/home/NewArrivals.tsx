@@ -104,7 +104,7 @@ export default function NewArrivals() {
                 alt={item.title}
                 width={300}
                 height={300}
-                className="object-cover mb-2"
+                className="object-cover mb-2 rounded"
                 style={{ width: "100%", height: "auto" }}
               />
               <div className="text-lg font-medium mb-1 w-full text-center">
