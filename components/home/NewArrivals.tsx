@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 
 // Default image for all items
-const defaultImage = "/assets/NoteBooks.png";
+const defaultImage = "/assets/NoteBooks.webp";
 
 // Hardcoded list of 8 items
 const items = [
