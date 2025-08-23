@@ -42,10 +42,10 @@ export default function Footer() {
           <div className="flex-1 text-center md:text-left">
             <div className="font-bold text-lg text-[#333] mb-2">My Account</div>
             <ul className="space-y-1">
-              <li><a href="#" className="flex items-center gap-1 text-[#385684] hover:text-[#27406a] transition-colors">
+              <li><a href="/not-implemented" className="flex items-center gap-1 text-[#385684] hover:text-[#27406a] transition-colors">
                 <MdAccountCircle size={18} />
                 My account</a></li>
-              <li><a href="#" className="flex items-center gap-1 text-[#385684] hover:text-[#27406a] transition-colors">
+              <li><a href="/not-implemented" className="flex items-center gap-1 text-[#385684] hover:text-[#27406a] transition-colors">
                 <MdOutlineShoppingCart size={18} />
                 Order History</a></li>
             </ul>
