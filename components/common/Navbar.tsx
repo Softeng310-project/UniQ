@@ -203,7 +203,8 @@ export function BottomBar() {
                       {/* For now, every submenu item goes to the parent tab */}
                       <Link
                         href={
-                          items.find((i) => i.name === current.name)!.path
+                          // Use items.find((i) => i.name === current.name)!.path when implemented.
+                          "/not-implemented"
                         }
                         className="hover:underline"
                       >
