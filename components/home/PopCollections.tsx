@@ -3,38 +3,30 @@ import Image from "next/image";
 export function Title() {
     return (
         <div>
-      <h2 className="text-3xl text-[#385684] text-center">
+      <h2 className="text-3xl text-[#385684] text-center mt-2">
         Popular Collections
       </h2>
-      <div className="flex justify-center">
-      <p className="mt-1 text-sm text-[#385684] text-center underline cursor-pointer hover:text-blue-700">
-        VIEW ALL
-      </p>
-      </div>
     </div>
     );
 }
 
 export function Collections() {
   const items = [
-    { src: "/assets/WritingSupplies.webp", alt: "Writing Supplies" },
-    { src: "/assets/CourseBooks.webp", alt: "Course Books" },
-    { src: "/assets/ArtSupplies.webp", alt: "Art Supplies" },
-    { src: "/assets/Notebooks.webp", alt: "Notebooks & Pads" },
-    { src: "/assets/Calculators.webp", alt: "Calculators" },
-    { src: "/assets/Erasers.webp", alt: "Erasers" },
-    { src: "/assets/Rulers.webp", alt: "Rulers" },
-    { src: "/assets/Scissors.webp", alt: "Scissors" },
+    { src: "/assets/WritingSupplies.webp", alt: "Writing Supplies", path: "/not-implemented" },
+    { src: "/assets/CourseBooks.webp", alt: "Course Books", path: "/course-books" },
+    { src: "/assets/ArtSupplies.webp", alt: "Art Supplies", path: "/not-implemented" },
+    { src: "/assets/Notebooks.webp", alt: "Notebooks & Pads", path: "/not-implemented" },
+    { src: "/assets/Calculators.webp", alt: "Calculators", path: "/not-implemented" },
+    { src: "/assets/Erasers.webp", alt: "Erasers", path: "/not-implemented" },
+    { src: "/assets/Rulers.webp", alt: "Rulers", path: "/not-implemented" },
+    { src: "/assets/Scissors.webp", alt: "Scissors", path: "/not-implemented" },
   ];
 
   return (
     <div className="px-10">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-5">
         {items.map((item, i) => (
-          <div
-            key={i}
-            className="relative w-full h-[200px] cursor-pointer"
-          >
+          <a href={item.path} key={i} className="relative w-full h-[200px] cursor-pointer block">
             {/* Image */}
             <Image
               src={item.src}
@@ -61,7 +53,7 @@ export function Collections() {
                 </span>
               </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </div>

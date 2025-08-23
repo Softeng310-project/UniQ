@@ -79,11 +79,11 @@ export function TopBar() {
 
       {/* Right - Account + Cart */}
       <div className="flex items-center space-x-6">
-        <Link href="/account" className="flex items-center space-x-2 cursor-pointer">
+        <Link href="/not-implemented" className="flex items-center space-x-2 cursor-pointer"> 
           <span>Account</span>
           <MdAccountCircle size={30} />
         </Link>
-        <Link href="/cart" className="flex items-center space-x-2 cursor-pointer">
+        <Link href="/not-implemented" className="flex items-center space-x-2 cursor-pointer">
           <span>Cart</span>
           <MdOutlineShoppingCart size={30} />
         </Link>
@@ -99,7 +99,8 @@ export function BottomBar() {
 
   const items: Item[] = [
     { name: "Home", path: "/" },
-    { name: "New Arrivals", path: "/new-arrivals" },
+    // Change to /new-arrivals when implemented
+    { name: "New Arrivals", path: "/not-implemented" },
 
     // Example mega menus (3 columns like your screenshot).
     {
@@ -113,7 +114,8 @@ export function BottomBar() {
     },
     {
       name: "Notebooks & Pads",
-      path: "/notebooks",
+      // Change to /notebooks when implemented
+      path: "/not-implemented",
       menu: [
         ["A4 Pads", "A5 Pads", "Dot Grid"],
         ["Hardcover Notebooks", "Softcover Notebooks"],
@@ -122,7 +124,8 @@ export function BottomBar() {
     },
     {
       name: "Writing Supplies",
-      path: "/writing-supplies",
+      // Change to /writing-supplies when implemented
+      path: "/not-implemented",
       menu: [
         ["Ballpoint", "Gel", "Fountain"],
         ["Highlighters", "Fineliners"],
@@ -131,7 +134,8 @@ export function BottomBar() {
     },
     {
       name: "Other",
-      path: "/other",
+      // Change to /other when implemented
+      path: "/not-implemented",
       menu: [
         ["Calculators", "Rulers"],
         ["Folders & Files", "Binders"],
