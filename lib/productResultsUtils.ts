@@ -11,6 +11,33 @@ export const sortOptions = [
 
 export const conditions = ["New", "Used"];
 
+// Product type configurations
+export const PRODUCT_TYPES = {
+  'course-books': {
+    name: 'Course Books',
+    breadcrumb: ['Home', 'Course Books'],
+    categoryLabel: 'Majors',
+    detailRoute: '/book',
+    imagePrefix: '/assets/book'
+  },
+  'notebooks': {
+    name: 'Notebooks',
+    breadcrumb: ['Home', 'Notebooks'],
+    categoryLabel: 'Types',
+    detailRoute: '/notebook',
+    imagePrefix: '/assets/notebook'
+  },
+  'writing-supplies': {
+    name: 'Writing Supplies',
+    breadcrumb: ['Home', 'Writing Supplies'],
+    categoryLabel: 'Categories',
+    detailRoute: '/writing-supply',
+    imagePrefix: '/assets/writing'
+  }
+} as const;
+
+export type ProductType = keyof typeof PRODUCT_TYPES;
+
 export function filterAndSortProducts(
   products: Product[],
   selectedCategories: string[],
@@ -52,6 +79,26 @@ export function paginateProducts(products: Product[], currentPage: number, items
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   return products.slice(startIndex, endIndex);
+}
+
+// Helper function to get product configuration
+export function getProductTypeConfig(productType: ProductType) {
+  return PRODUCT_TYPES[productType];
+}
+
+// Helper function to transform database product to Product interface
+export function transformDatabaseProduct(product: any, productType: ProductType): Product {
+  const config = getProductTypeConfig(productType);
+  
+  return {
+    id: product.id,
+    title: product.title,
+    author: product.author || '',
+    price: product.price,
+    condition: product.condition,
+    category: product.category,
+    image: `${config.imagePrefix}${product.id}.jpg`
+  };
 }
 
 // Mock data - University coursebooks (example for one category)

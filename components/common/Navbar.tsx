@@ -104,7 +104,7 @@ export function BottomBar() {
     // Example mega menus (3 columns like your screenshot).
     {
       name: "Course Books",
-      path: "/course-books",
+      path: "/not-implemented",
       menu: [
         ["Arts", "Business and Economics", "Creative Arts and Industries"],
         ["Education and Social Work", "Engineering", "Law"],
@@ -143,8 +143,13 @@ export function BottomBar() {
     },
   ];
 
-  const isActivePath = (path: string) =>
-    path === "/" ? pathname === "/" : pathname.startsWith(path);
+  const isActivePath = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    // For other paths, use exact match to avoid multiple tabs being active
+    return pathname === path;
+  };
 
   const current = items.find((i) => i.name === hovered);
 
@@ -157,7 +162,9 @@ export function BottomBar() {
       {/* Tabs */}
       <div className="bg-[#FFDBC2] h-14 flex justify-center items-center gap-10">
         {items.map((item) => {
-          const isActive = isActivePath(item.path);
+          const isActive = item.name === "Course Books" 
+            ? pathname.startsWith("/course-books") || pathname === "/not-implemented"
+            : isActivePath(item.path);
           const hasMenu = !!item.menu;
 
           return (
@@ -202,8 +209,9 @@ export function BottomBar() {
                       {/* For now, every submenu item goes to the parent tab */}
                       <Link
                         href={
-                          // Use items.find((i) => i.name === current.name)!.path when implemented.
-                          "/not-implemented"
+                          current.name === "Course Books" && label === "Engineering"
+                            ? "/course-books/engineering"
+                            : "/not-implemented"
                         }
                         className="hover:underline"
                       >
