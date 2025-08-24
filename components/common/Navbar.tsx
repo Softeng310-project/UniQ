@@ -99,8 +99,7 @@ export function BottomBar() {
 
   const items: Item[] = [
     { name: "Home", path: "/" },
-    // Change to /new-arrivals when implemented
-    { name: "New Arrivals", path: "/not-implemented" },
+    { name: "New Arrivals", path: "/new-arrivals" },
 
     // Example mega menus (3 columns like your screenshot).
     {
