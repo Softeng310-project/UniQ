@@ -7,8 +7,8 @@ if (!uri) {
   throw new Error('Please add your MongoDB URI to .env.local');
 }
 
-let client;
-let clientPromise;
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
 
 declare global {
   // eslint-disable-next-line no-var
@@ -26,4 +26,4 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = client.connect();
 }
 
-export default clientPromise;
+export default clientPromise as Promise<MongoClient>;
