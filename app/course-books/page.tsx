@@ -23,6 +23,14 @@ export default function CourseBooks() {
     router.push(`/course-books/${urlPath}`);
   };
 
+  // Handles keyboard accessibility, so you can tab through the boxes
+  const handleKeyDown = (e: React.KeyboardEvent, degree: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleDegreeClick(degree);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white py-14">
       {/* Title with underline */}
@@ -37,9 +45,14 @@ export default function CourseBooks() {
         <div className="grid grid-cols-4 grid-rows-2 gap-6 w-full">
           {degrees.map((degree, index) => (
             <div
+              // keyboard accessible boxes
               key={index}
               onClick={() => handleDegreeClick(degree.name)}
-              className="relative w-full h-64 cursor-pointer rounded-lg overflow-hidden"
+              onKeyDown={(e) => handleKeyDown(e, degree.name)}
+              tabIndex={0}
+              role="button"
+              aria-label={`Browse ${degree.name} course books`}
+              className="relative w-full h-64 cursor-pointer rounded-lg overflow-hidden focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50"
             >
               {/* Background Image */}
               <Image
