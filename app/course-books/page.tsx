@@ -8,7 +8,7 @@ import ProductGrid from "../../components/product-results/ProductGrid";
 import Pagination from "../../components/product-results/Pagination";
 import { Product } from "../../components/product-results/ProductCard";
 import { useProductResults } from "../../hooks/useProductResults";
-import { engineeringMajors, conditions, sortOptions, mockCourseBooks } from "../../lib/productResultsUtils";
+import { engineeringMajors, conditions, sortOptions, mockCourseBooks, years } from "../../lib/productResultsUtils";
 
 interface CourseBooksPageProps {
   // Props for dynamic content
@@ -26,6 +26,7 @@ export default function CourseBooks({
   const {
     selectedCategories,
     selectedConditions,
+    selectedYears,
     sortBy,
     currentPage,
     sortOpen,
@@ -35,6 +36,7 @@ export default function CourseBooks({
     setCurrentPage,
     toggleCategory,
     toggleCondition,
+    toggleYear,
     toggleSortOpen,
   } = useProductResults({ products });
 
@@ -63,10 +65,13 @@ export default function CourseBooks({
         <FilterSidebar
           categories={engineeringMajors}
           conditions={conditions}
+          years={years}
           selectedCategories={selectedCategories}
           selectedConditions={selectedConditions}
+          selectedYears={selectedYears}
           onCategoryToggle={toggleCategory}
           onConditionToggle={toggleCondition}
+          onYearToggle={toggleYear}
           categoryLabel="Majors"
         />
 

@@ -1,22 +1,28 @@
 import React from "react";
 
 interface FilterSidebarProps {
-  categories: string[];
-  conditions: string[];
-  selectedCategories: string[];
-  selectedConditions: string[];
-  onCategoryToggle: (category: string) => void;
-  onConditionToggle: (condition: string) => void;
-  categoryLabel?: string;
+  readonly categories: string[];
+  readonly conditions: string[];
+  readonly years: string[];
+  readonly selectedCategories: string[];
+  readonly selectedConditions: string[];
+  readonly selectedYears: string[];
+  readonly onCategoryToggle: (category: string) => void;
+  readonly onConditionToggle: (condition: string) => void;
+  readonly onYearToggle: (year: string) => void;
+  readonly categoryLabel?: string;
 }
 
 export default function FilterSidebar({
   categories,
   conditions,
+  years,
   selectedCategories,
   selectedConditions,
+  selectedYears,
   onCategoryToggle,
   onConditionToggle,
+  onYearToggle,
   categoryLabel = "Categories"
 }: FilterSidebarProps) {
   return (
@@ -38,7 +44,23 @@ export default function FilterSidebar({
           ))}
         </div>
       </div>
-
+      <div className="mb-6">
+        <h2 className="font-light text-[#556C8E] mb-2 text-xl">Year</h2>
+        <div className="space-y-1">
+          {years.map((year) => (
+            <label key={year} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={selectedYears.includes(year)}
+                onChange={() => onYearToggle(year)}
+                className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
+                aria-label={`Filter by ${year}`}
+              />
+              <span className="text-[#556C8E] font-mandali">{year}</span>
+            </label>
+          ))}
+        </div>
+      </div>
       <div>
         <h2 className="font-light text-[#4D6890] mb-2 text-xl">Condition</h2>
         <div className="space-y-1">

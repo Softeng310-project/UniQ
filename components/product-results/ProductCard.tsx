@@ -7,6 +7,7 @@ export interface Product {
   price: number;
   condition: string;
   category: string;
+  year: string;
   image?: string;
 }
 
