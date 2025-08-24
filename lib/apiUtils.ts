@@ -38,11 +38,29 @@ export interface FilterData {
   years: number[];
 }
 
+export interface ApiResponse {
+  pagination: PaginationInfo;
+  filters: FilterData;
+}
+
 export async function ensureDatabaseConnection() {
   await clientPromise;
   if (!mongoose.connection.readyState) {
     await mongoose.connect(process.env.MONGODB_URI!);
   }
+}
+
+export function extractQueryParams(searchParams: URLSearchParams): QueryParams {
+  return {
+    category: searchParams.get('category'),
+    condition: searchParams.get('condition'),
+    major: searchParams.get('major'),
+    degree: searchParams.get('degree'),
+    year: searchParams.get('year'),
+    page: searchParams.get('page'),
+    limit: searchParams.get('limit'),
+    sortBy: searchParams.get('sortBy')
+  };
 }
 
 export function buildFilter(params: QueryParams): any {
@@ -145,4 +163,15 @@ export function createPaginationInfo(total: number, page: number, limit: number)
 
 export function createFilterData(categories: string[], majors: string[], years: number[]): FilterData {
   return { categories, majors, years };
+}
+
+export function createErrorResponse(message: string, status: number = 500) {
+  return Response.json({ error: message }, { status });
+}
+
+export function createSuccessResponse(data: any, additionalFields?: Record<string, any>) {
+  return Response.json({
+    ...data,
+    ...additionalFields
+  });
 }

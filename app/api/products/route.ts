@@ -1,12 +1,14 @@
 import {
   ensureDatabaseConnection,
+  extractQueryParams,
   buildFilter,
   buildSort,
   getPaginationParams,
   fetchBooksData,
   createPaginationInfo,
   createFilterData,
-  type QueryParams
+  createErrorResponse,
+  createSuccessResponse
 } from "@/lib/apiUtils";
 
 export async function GET(request: Request) {
@@ -14,18 +16,7 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const productType = searchParams.get('type') || 'course-books';
-  
-  const params: QueryParams = {
-    category: searchParams.get('category'),
-    condition: searchParams.get('condition'),
-    major: searchParams.get('major'),
-    degree: searchParams.get('degree'),
-    year: searchParams.get('year'),
-    page: searchParams.get('page'),
-    limit: searchParams.get('limit'),
-    sortBy: searchParams.get('sortBy')
-  };
-
+  const params = extractQueryParams(searchParams);
   const filter = buildFilter(params);
   const sort = buildSort(params.sortBy || 'title');
   const { page, limit } = getPaginationParams(params);
@@ -57,17 +48,16 @@ export async function GET(request: Request) {
       //   break;
 
       default:
-        return Response.json({ error: "Invalid product type" }, { status: 400 });
+        return createErrorResponse("Invalid product type", 400);
     }
 
-    return Response.json({
+    return createSuccessResponse({
       products,
       pagination: createPaginationInfo(total, page, limit),
-      filters: createFilterData(categories, majors, years),
-      productType
-    });
+      filters: createFilterData(categories, majors, years)
+    }, { productType });
   } catch (error) {
     console.error('Error fetching products:', error);
-    return Response.json({ error: "Failed to fetch products" }, { status: 500 });
+    return createErrorResponse("Failed to fetch products");
   }
 }
