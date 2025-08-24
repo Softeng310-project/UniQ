@@ -8,9 +8,11 @@ import Pagination from "../../components/product-results/Pagination";
 import { Product } from "../../components/product-results/ProductCard";
 import { sortOptions } from "../../lib/productResultsUtils";
 import { useProductResults } from "../../hooks/useProductResults";
+import { useRouter } from "next/navigation";
 
 export default function NewArrivalsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const defaultSort = "Date added, newest to oldest";
   const breadcrumbItems = ["Home", "New Arrivals"];
   const pageTitle = "New Arrivals";
 
@@ -22,18 +24,23 @@ export default function NewArrivalsPage() {
 
   const {
     sortBy,
+    setSortBy,
     currentPage,
     sortOpen,
     totalPages,
     currentProducts,
-    setSortBy,
     setCurrentPage,
     toggleSortOpen,
   } = useProductResults({ products });
 
+  useEffect(() => {
+    setSortBy(defaultSort);
+  }, []);
+
+  const router = useRouter();
+
   const handleProductClick = (product: Product) => {
-    // TODO: Navigate to product detail page
-    console.log('Navigate to product:', product.id);
+    router.push(`/book/${product.id}`);
   };
 
   return (

@@ -5,6 +5,8 @@ export const sortOptions = [
   "Alphabetically, Z-A",
   "Price, low to high",
   "Price, high to low",
+  "Date added, newest to oldest",
+  "Date added, oldest to newest",
 ];
 
 export const conditions = ["New", "Used"];
@@ -37,6 +39,10 @@ export function filterAndSortProducts(
       return filtered.sort((a, b) => a.price - b.price);
     case "Price, high to low":
       return filtered.sort((a, b) => b.price - a.price);
+    case "Date added, newest to oldest":
+      return filtered.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+    case "Date added, oldest to newest":
+      return filtered.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
     default:
       return filtered;
   }
