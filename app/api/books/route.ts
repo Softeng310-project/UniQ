@@ -10,6 +10,7 @@ export async function GET(request: Request) {
   const category = searchParams.get('category');
   const condition = searchParams.get('condition');
   const major = searchParams.get('major');
+  const degree = searchParams.get('degree');
   const year = searchParams.get('year');
   const page = parseInt(searchParams.get('page') || '1');
   const limit = parseInt(searchParams.get('limit') || '12');
@@ -39,6 +40,7 @@ export async function GET(request: Request) {
   }
   
   if (major) filter.major = major;
+  if (degree) filter.degree = degree;
   if (year) filter.year = parseInt(year);
 
   // Build sort object

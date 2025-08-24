@@ -144,8 +144,13 @@ export function BottomBar() {
     },
   ];
 
-  const isActivePath = (path: string) =>
-    path === "/" ? pathname === "/" : pathname.startsWith(path);
+  const isActivePath = (path: string) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    // For other paths, use exact match to avoid multiple tabs being active
+    return pathname === path;
+  };
 
   const current = items.find((i) => i.name === hovered);
 
@@ -158,7 +163,9 @@ export function BottomBar() {
       {/* Tabs */}
       <div className="bg-[#FFDBC2] h-14 flex justify-center items-center gap-10">
         {items.map((item) => {
-          const isActive = isActivePath(item.path);
+          const isActive = item.name === "Course Books" 
+            ? pathname.startsWith("/course-books") || pathname === "/not-implemented"
+            : isActivePath(item.path);
           const hasMenu = !!item.menu;
 
           return (
@@ -204,7 +211,7 @@ export function BottomBar() {
                       <Link
                         href={
                           current.name === "Course Books" && label === "Engineering"
-                            ? "/course-books"
+                            ? "/course-books/engineering"
                             : "/not-implemented"
                         }
                         className="hover:underline"

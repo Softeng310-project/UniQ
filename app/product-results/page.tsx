@@ -16,12 +16,14 @@ interface ProductResultsPageProps {
   breadcrumbItems?: string[];
   pageTitle?: string;
   productType?: ProductType;
+  degree?: string;
 }
 
 export default function ProductResults({ 
   breadcrumbItems = ["Home", "Course Books"],
   pageTitle = "Course Books",
-  productType = "course-books"
+  productType = "course-books",
+  degree
 }: ProductResultsPageProps) {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
@@ -63,6 +65,23 @@ export default function ProductResults({
       params.append('type', productType);
       params.append('page', currentPage.toString());
       params.append('limit', '12');
+      
+      // Add degree filter if provided
+      if (degree) {
+        // Convert URL degree to database degree format
+        const degreeMapping: { [key: string]: string } = {
+          'engineering': 'Bachelor of Engineering',
+          'arts': 'Bachelor of Arts',
+          'science': 'Bachelor of Science',
+          'business': 'Bachelor of Commerce',
+          'law': 'Bachelor of Laws',
+          'medicine': 'Bachelor of Medicine',
+          'education': 'Bachelor of Education'
+        };
+        
+        const dbDegree = degreeMapping[degree] || degree;
+        params.append('degree', dbDegree);
+      }
       
       // Add sort parameter
       switch (sortBy) {
