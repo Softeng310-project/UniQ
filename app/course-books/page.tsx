@@ -61,8 +61,8 @@ export default function CourseBooks() {
 
               {/* Title box */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-gray-500 bg-opacity-20 px-4 py-2 rounded">
-                  <span className="text-white text-lg font-semibold text-center">
+                <div className="px-4 py-2 rounded">
+                  <span className="text-white text-xl font-bold text-center">
                     {degree.name.toUpperCase()}
                   </span>
                 </div>
