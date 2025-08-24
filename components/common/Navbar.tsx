@@ -105,7 +105,7 @@ export function BottomBar() {
     // Example mega menus (3 columns like your screenshot).
     {
       name: "Course Books",
-      path: "/course-books",
+      path: "/not-implemented",
       menu: [
         ["Arts", "Business and Economics", "Creative Arts and Industries"],
         ["Education and Social Work", "Engineering", "Law"],
@@ -203,8 +203,9 @@ export function BottomBar() {
                       {/* For now, every submenu item goes to the parent tab */}
                       <Link
                         href={
-                          // Use items.find((i) => i.name === current.name)!.path when implemented.
-                          "/not-implemented"
+                          current.name === "Course Books" && label === "Engineering"
+                            ? "/course-books"
+                            : "/not-implemented"
                         }
                         className="hover:underline"
                       >

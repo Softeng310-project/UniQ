@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   if (!mongoose.connection.readyState) await mongoose.connect(process.env.MONGODB_URI!);
 
   const { searchParams } = new URL(request.url);
+  const productType = searchParams.get('type') || 'course-books';
   const category = searchParams.get('category');
   const condition = searchParams.get('condition');
   const major = searchParams.get('major');
@@ -61,23 +62,45 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Get total count for pagination
-    const total = await Book.countDocuments(filter);
-    
-    // Get books with pagination
-    const books = await Book.find(filter)
-      .sort(sort)
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .lean();
+    let products;
+    let total;
+    let categories;
+    let majors;
+    let years;
 
-    // Get unique categories and majors for filters
-    const categories = await Book.distinct('category');
-    const majors = await Book.distinct('major');
-    const years = await Book.distinct('year');
+    // Handle different product types
+    switch (productType) {
+      case 'course-books':
+        // Get total count for pagination
+        total = await Book.countDocuments(filter);
+        
+        // Get books with pagination
+        products = await Book.find(filter)
+          .sort(sort)
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .lean();
+
+        // Get unique categories and majors for filters
+        categories = await Book.distinct('category');
+        majors = await Book.distinct('major');
+        years = await Book.distinct('year');
+        break;
+
+      // Add more product types here in the future
+      // case 'notebooks':
+      //   // Handle notebooks
+      //   break;
+      // case 'writing-supplies':
+      //   // Handle writing supplies
+      //   break;
+
+      default:
+        return Response.json({ error: "Invalid product type" }, { status: 400 });
+    }
 
     return Response.json({
-      books,
+      products,
       pagination: {
         currentPage: page,
         totalPages: Math.ceil(total / limit),
@@ -88,10 +111,11 @@ export async function GET(request: Request) {
         categories,
         majors,
         years
-      }
+      },
+      productType
     });
   } catch (error) {
-    console.error('Error fetching books:', error);
-    return Response.json({ error: "Failed to fetch books" }, { status: 500 });
+    console.error('Error fetching products:', error);
+    return Response.json({ error: "Failed to fetch products" }, { status: 500 });
   }
 }
