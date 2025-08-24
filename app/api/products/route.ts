@@ -1,67 +1,34 @@
-import Book from "@/models/Book";
-import mongoose from "mongoose";
-import clientPromise from "@/lib/mongodb";
+import {
+  ensureDatabaseConnection,
+  buildFilter,
+  buildSort,
+  getPaginationParams,
+  fetchBooksData,
+  createPaginationInfo,
+  createFilterData,
+  type QueryParams
+} from "@/lib/apiUtils";
 
 export async function GET(request: Request) {
-  await clientPromise;
-  if (!mongoose.connection.readyState) await mongoose.connect(process.env.MONGODB_URI!);
+  await ensureDatabaseConnection();
 
   const { searchParams } = new URL(request.url);
   const productType = searchParams.get('type') || 'course-books';
-  const category = searchParams.get('category');
-  const condition = searchParams.get('condition');
-  const major = searchParams.get('major');
-  const degree = searchParams.get('degree');
-  const year = searchParams.get('year');
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '12');
-  const sortBy = searchParams.get('sortBy') || 'title';
+  
+  const params: QueryParams = {
+    category: searchParams.get('category'),
+    condition: searchParams.get('condition'),
+    major: searchParams.get('major'),
+    degree: searchParams.get('degree'),
+    year: searchParams.get('year'),
+    page: searchParams.get('page'),
+    limit: searchParams.get('limit'),
+    sortBy: searchParams.get('sortBy')
+  };
 
-  // Build filter object
-  const filter: any = {};
-  
-  // Handle multiple categories (comma-separated)
-  if (category) {
-    const categories = category.split(',');
-    if (categories.length > 1) {
-      filter.category = { $in: categories };
-    } else {
-      filter.category = category;
-    }
-  }
-  
-  // Handle multiple conditions (comma-separated)
-  if (condition) {
-    const conditions = condition.split(',');
-    if (conditions.length > 1) {
-      filter.condition = { $in: conditions };
-    } else {
-      filter.condition = condition;
-    }
-  }
-  
-  if (major) filter.major = major;
-  if (degree) filter.degree = degree;
-  if (year) filter.year = parseInt(year);
-
-  // Build sort object
-  let sort: any = {};
-  switch (sortBy) {
-    case 'title':
-      sort.title = 1;
-      break;
-    case 'title-desc':
-      sort.title = -1;
-      break;
-    case 'price':
-      sort.price = 1;
-      break;
-    case 'price-desc':
-      sort.price = -1;
-      break;
-    default:
-      sort.title = 1;
-  }
+  const filter = buildFilter(params);
+  const sort = buildSort(params.sortBy || 'title');
+  const { page, limit } = getPaginationParams(params);
 
   try {
     let products;
@@ -73,20 +40,12 @@ export async function GET(request: Request) {
     // Handle different product types
     switch (productType) {
       case 'course-books':
-        // Get total count for pagination
-        total = await Book.countDocuments(filter);
-        
-        // Get books with pagination
-        products = await Book.find(filter)
-          .sort(sort)
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .lean();
-
-        // Get unique categories and majors for filters
-        categories = await Book.distinct('category');
-        majors = await Book.distinct('major');
-        years = await Book.distinct('year');
+        const booksData = await fetchBooksData(filter, sort, page, limit);
+        products = booksData.books;
+        total = booksData.total;
+        categories = booksData.categories;
+        majors = booksData.majors;
+        years = booksData.years;
         break;
 
       // Add more product types here in the future
@@ -103,17 +62,8 @@ export async function GET(request: Request) {
 
     return Response.json({
       products,
-      pagination: {
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-        totalItems: total,
-        itemsPerPage: limit
-      },
-      filters: {
-        categories,
-        majors,
-        years
-      },
+      pagination: createPaginationInfo(total, page, limit),
+      filters: createFilterData(categories, majors, years),
       productType
     });
   } catch (error) {
