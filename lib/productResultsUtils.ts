@@ -1,4 +1,4 @@
-export const years = ["1 Year", "2 Year", "3 Year", "4 Year"];
+export const years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 import { Product } from "@/components/product-results/ProductCard";
 
 export const sortOptions = [
