@@ -101,7 +101,7 @@ export function BottomBar() {
     { name: "Home", path: "/" },
     { name: "New Arrivals", path: "/new-arrivals" },
 
-    // Example mega menus (3 columns like your screenshot).
+    // Course Books with degree categories
     {
       name: "Course Books",
       path: "/not-implemented",
@@ -152,6 +152,21 @@ export function BottomBar() {
   };
 
   const current = items.find((i) => i.name === hovered);
+
+  // Helper function to convert degree name to URL slug
+  const getDegreeSlug = (degreeName: string) => {
+    const slugMap: { [key: string]: string } = {
+      'Arts': 'arts',
+      'Business and Economics': 'business-and-economics',
+      'Creative Arts and Industries': 'creative-arts-and-industries',
+      'Education and Social Work': 'education-and-social-work',
+      'Engineering': 'engineering',
+      'Law': 'law',
+      'Medicine & Health Science': 'medicine-and-health-science',
+      'Science': 'science'
+    };
+    return slugMap[degreeName] || 'not-implemented';
+  };
 
   return (
     // Wrap bar + panel so leaving both closes the dropdown
@@ -206,11 +221,10 @@ export function BottomBar() {
                 <ul key={ci} className="space-y-3">
                   {col.map((label) => (
                     <li key={label}>
-                      {/* For now, every submenu item goes to the parent tab */}
                       <Link
                         href={
-                          current.name === "Course Books" && label === "Engineering"
-                            ? "/course-books/engineering"
+                          current.name === "Course Books" 
+                            ? `/course-books/${getDegreeSlug(label)}`
                             : "/not-implemented"
                         }
                         className="hover:underline"
