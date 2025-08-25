@@ -43,6 +43,7 @@ export default function ProductResults({
   const {
     selectedCategories,
     selectedConditions,
+    selectedYears,
     sortBy,
     currentPage,
     sortOpen,
@@ -50,6 +51,7 @@ export default function ProductResults({
     setCurrentPage,
     toggleCategory,
     toggleCondition,
+    toggleYear,
     toggleSortOpen,
   } = useProductResults({ products });
 
@@ -106,6 +108,14 @@ export default function ProductResults({
       if (selectedConditions.length > 0) {
         params.append('condition', selectedConditions.join(','));
       }
+      if (selectedYears.length > 0) {
+        // Convert year strings to numbers (e.g., "1st Year" -> 1)
+        const yearNumbers = selectedYears.map(year => {
+          const match = year.match(/(\d+)/);
+          return match ? match[1] : '1';
+        });
+        params.append('year', yearNumbers.join(','));
+      }
 
       const response = await fetch(`/api/products?${params.toString()}`);
       if (!response.ok) {
@@ -148,7 +158,7 @@ export default function ProductResults({
     }, 300); // 300ms debounce
 
     return () => clearTimeout(timeoutId);
-  }, [selectedCategories, selectedConditions]);
+  }, [selectedCategories, selectedConditions, selectedYears]);
 
   const handleProductClick = (product: Product) => {
     // Navigate to product detail page
@@ -194,8 +204,10 @@ export default function ProductResults({
           conditions={conditions}
           selectedCategories={selectedCategories}
           selectedConditions={selectedConditions}
+          selectedYears={selectedYears}
           onCategoryToggle={toggleCategory}
           onConditionToggle={toggleCondition}
+          onYearToggle={toggleYear}
           categoryLabel={getProductTypeConfig(productType).categoryLabel}
         />
 

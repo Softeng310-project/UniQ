@@ -88,13 +88,13 @@ Utility functions for filtering, sorting, and pagination.
 ### Course Books Page
 ```tsx
 import { useProductResults } from '@/hooks/useProductResults';
-import { engineeringMajors, conditions, sortOptions, mockCourseBooks } from '@/lib/productResultsUtils';
+import { engineeringMajors, conditions, sortOptions } from '@/lib/productResultsUtils';
 import { Breadcrumb, SortDropdown, FilterSidebar, ProductGrid, Pagination } from '@/components/product-results';
 
 export default function CourseBooksPage({ 
   breadcrumbItems = ["Home", "Course Books", "Engineering", "2nd Year"],
   pageTitle = "Engineering: 2nd Year",
-  products = mockCourseBooks
+  products = []
 }) {
   const {
     selectedCategories,

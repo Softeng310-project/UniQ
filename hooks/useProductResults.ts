@@ -10,6 +10,7 @@ interface UseProductResultsProps {
 export function useProductResults({ products, itemsPerPage = 16 }: UseProductResultsProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState(sortOptions[0]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOpen, setSortOpen] = useState(false);
@@ -31,6 +32,14 @@ export function useProductResults({ products, itemsPerPage = 16 }: UseProductRes
     );
   };
 
+  const toggleYear = (year: string) => {
+    setSelectedYears((prev) =>
+      prev.includes(year)
+        ? prev.filter((y) => y !== year)
+        : [...prev, year]
+    );
+  };
+
   const toggleSortOpen = () => {
     setSortOpen(prev => !prev);
   };
@@ -43,8 +52,8 @@ export function useProductResults({ products, itemsPerPage = 16 }: UseProductRes
 
   // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {
-    return filterAndSortProducts(products, selectedCategories, selectedConditions, sortBy);
-  }, [products, selectedCategories, selectedConditions, sortBy, forceUpdate]);
+    return filterAndSortProducts(products, selectedCategories, selectedConditions, selectedYears, sortBy);
+  }, [products, selectedCategories, selectedConditions, selectedYears, sortBy, forceUpdate]);
 
   // Pagination
   const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
@@ -55,7 +64,7 @@ export function useProductResults({ products, itemsPerPage = 16 }: UseProductRes
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [selectedCategories, selectedConditions]);
+  }, [selectedCategories, selectedConditions, selectedYears]);
 
   // Scroll to top when page changes
   useEffect(() => {
@@ -66,6 +75,7 @@ export function useProductResults({ products, itemsPerPage = 16 }: UseProductRes
     // State
     selectedCategories,
     selectedConditions,
+    selectedYears,
     sortBy,
     currentPage,
     sortOpen,
@@ -76,11 +86,13 @@ export function useProductResults({ products, itemsPerPage = 16 }: UseProductRes
     // Actions
     setSelectedCategories,
     setSelectedConditions,
+    setSelectedYears,
     setSortBy: handleSortChange,
     setCurrentPage,
     setSortOpen,
     toggleCategory,
     toggleCondition,
+    toggleYear,
     toggleSortOpen,
   };
 }
