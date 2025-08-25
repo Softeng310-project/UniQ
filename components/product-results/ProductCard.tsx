@@ -8,6 +8,7 @@ export interface Product {
   condition: string;
   category: string;
   image?: string;
+  year?: number; // Year level for course books (1-4)
 }
 
 interface ProductCardProps {

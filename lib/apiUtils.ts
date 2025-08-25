@@ -88,7 +88,16 @@ export function buildFilter(params: QueryParams): any {
   
   if (params.major) filter.major = params.major;
   if (params.degree) filter.degree = params.degree;
-  if (params.year) filter.year = parseInt(params.year);
+  
+  // Handle multiple years (comma-separated)
+  if (params.year) {
+    const years = params.year.split(',').map(y => parseInt(y));
+    if (years.length > 1) {
+      filter.year = { $in: years };
+    } else {
+      filter.year = years[0];
+    }
+  }
 
   return filter;
 }
