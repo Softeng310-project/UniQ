@@ -36,29 +36,33 @@ UniQ is a centralised marketplace for University of Auckland students, designed 
 
 **Installation**
 
-1. **Clone the repository**
+1. **Fork the repository**  
+   Click the "Fork" button at the top right of the repository page to create your own copy.
+
+2. **Clone your fork**  
+   Replace `<your-username>` with your GitHub username:
    ```bash
-   git clone https://github.com/Softeng310-project/UniQ.git
+   git clone https://github.com/<your-username>/UniQ.git
    cd UniQ
    ```
 
-2. **Install dependencies:**
+3. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Set up environment variables:**
+4. **Set up environment variables:**
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    ```
-   Edit `.env.local` with your MongoDB connection string.
+   Edit `.env` with your MongoDB connection string.
 
-4. **Run the development server:**
+5. **Run the development server:**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser:**
+6. **Open your browser:**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Project Structure
