@@ -6,6 +6,9 @@ interface ProductGridProps {
   onProductClick: (product: Product) => void;
 }
 
+// Renders a responsive grid of product cards
+// Shows empty state message when no products match filter criteria
+// Handles responsive layout: 1 column on mobile, 2 on small screens, 3 on medium, 4 on large
 export default function ProductGrid({ products, onProductClick }: ProductGridProps) {
   if (products.length === 0) {
     return (

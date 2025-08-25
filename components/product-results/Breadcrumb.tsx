@@ -5,6 +5,9 @@ interface BreadcrumbProps {
   title: string;
 }
 
+// Displays navigation breadcrumbs and page title
+// Shows hierarchical navigation path (e.g., Home > Course Books > Engineering)
+// Provides context for current page location in the application
 export default function Breadcrumb({ items, title }: BreadcrumbProps) {
   return (
     <div className="pl-16 py-6 text-sm text-[#2A4163]">

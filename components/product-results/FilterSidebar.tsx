@@ -12,6 +12,9 @@ interface FilterSidebarProps {
   categoryLabel?: string;
 }
 
+// Provides filtering controls for product search results
+// Supports multi-select filtering by categories (majors), years, and conditions
+// Uses controlled checkboxes that sync with parent component state
 export default function FilterSidebar({
   categories,
   conditions,

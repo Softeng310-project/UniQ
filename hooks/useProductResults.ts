@@ -7,6 +7,9 @@ interface UseProductResultsProps {
   itemsPerPage?: number;
 }
 
+// Main hook for managing product results state and interactions
+// Handles filtering, sorting, pagination, and UI state for product listings
+// Provides all necessary state and actions for product results pages
 export function useProductResults({ products, itemsPerPage = 16 }: UseProductResultsProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
@@ -16,6 +19,7 @@ export function useProductResults({ products, itemsPerPage = 16 }: UseProductRes
   const [sortOpen, setSortOpen] = useState(false);
   const [forceUpdate, setForceUpdate] = useState(0);
 
+  // Toggle functions for multi-select filters
   const toggleCategory = (category: string) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -50,12 +54,12 @@ export function useProductResults({ products, itemsPerPage = 16 }: UseProductRes
     setForceUpdate(prev => prev + 1);
   };
 
-  // Filter and sort products
+  // Filter and sort products based on current selections
   const filteredAndSortedProducts = useMemo(() => {
     return filterAndSortProducts(products, selectedCategories, selectedConditions, selectedYears, sortBy);
   }, [products, selectedCategories, selectedConditions, selectedYears, sortBy, forceUpdate]);
 
-  // Pagination
+  // Pagination calculations
   const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
   const currentProducts = useMemo(() => {
     return paginateProducts(filteredAndSortedProducts, currentPage, itemsPerPage);
