@@ -104,7 +104,7 @@ export function BottomBar() {
     // Course Books with degree categories
     {
       name: "Course Books",
-      path: "/not-implemented",
+      path: "/course-books",
       menu: [
         ["Arts", "Business and Economics", "Creative Arts and Industries"],
         ["Education and Social Work", "Engineering", "Law"],
