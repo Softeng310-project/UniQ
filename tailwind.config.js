@@ -7,11 +7,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // Custom color palette for UniQ marketplace branding
       colors: {
         'uniq-blue': '#1e40af',
         'uniq-light-blue': '#3b82f6',
         'uniq-dark': '#1f2937',
       },
+      // Custom font family for consistent typography
       fontFamily: {
         'mandali': ['Mandali', 'sans-serif'],
       },
