@@ -11,7 +11,8 @@ export const sortOptions = [
 
 export const conditions = ["New", "Used"];
 
-// Product type configurations
+// Configuration for different product types (course books, notebooks & pads, writing supplies)
+// Defines breadcrumbs, category labels, routes, and image prefixes for each type
 export const PRODUCT_TYPES = {
   'course-books': {
     name: 'Course Books',
@@ -20,9 +21,9 @@ export const PRODUCT_TYPES = {
     detailRoute: '/book',
     imagePrefix: '/assets/book'
   },
-  'notebooks': {
-    name: 'Notebooks',
-    breadcrumb: ['Home', 'Notebooks'],
+  'notebooks-and-pads': {
+    name: 'Notebooks & Pads',
+    breadcrumb: ['Home', 'Notebooks & Pads'],
     categoryLabel: 'Types',
     detailRoute: '/notebook',
     imagePrefix: '/assets/notebook'
@@ -38,6 +39,8 @@ export const PRODUCT_TYPES = {
 
 export type ProductType = keyof typeof PRODUCT_TYPES;
 
+// Core filtering and sorting logic for product results
+// Applies category, condition, and year filters, then sorts by selected criteria
 export function filterAndSortProducts(
   products: Product[],
   selectedCategories: string[],
@@ -95,8 +98,7 @@ function extractYearNumber(yearString: string): number {
   return match ? parseInt(match[1]) : 0;
 }
 
-
-
+// Splits product array into pages for pagination
 export function paginateProducts(products: Product[], currentPage: number, itemsPerPage: number): Product[] {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -108,7 +110,8 @@ export function getProductTypeConfig(productType: ProductType) {
   return PRODUCT_TYPES[productType];
 }
 
-// Helper function to transform database product to Product interface
+// Transforms database product data to match Product interface
+// Handles optional fields and provides fallback image paths
 export function transformDatabaseProduct(product: any, productType: ProductType): Product {
   const config = getProductTypeConfig(productType);
   
@@ -124,9 +127,7 @@ export function transformDatabaseProduct(product: any, productType: ProductType)
   };
 }
 
-
-
-// Example categories for different product types
+// Available categories for different product types
 export const engineeringMajors = [
   "Biomedical Engineering",
   "Chemical and Materials Engineering",

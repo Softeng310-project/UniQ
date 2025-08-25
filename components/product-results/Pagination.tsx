@@ -6,6 +6,9 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
+// Provides navigation controls for paginated product results
+// Shows page numbers, previous/next buttons, and current page indicator
+// Hides pagination when there's only one page of results
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   if (totalPages <= 1) {
     return null;

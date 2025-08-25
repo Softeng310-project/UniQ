@@ -8,6 +8,9 @@ interface SortDropdownProps {
   onToggle: () => void;
 }
 
+// Provides sorting controls for product results
+// Displays current sort option and allows selection from dropdown menu
+// Handles dropdown open/close state and keyboard accessibility
 export default function SortDropdown({ 
   sortOptions, 
   currentSort, 

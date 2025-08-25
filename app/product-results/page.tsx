@@ -19,6 +19,9 @@ interface ProductResultsPageProps {
   degree?: string;
 }
 
+// Main product results page that displays filtered and paginated product listings
+// Handles API data fetching, filtering, sorting, and pagination
+// Supports different product types (course books, notebooks, writing supplies)
 export default function ProductResults({ 
   breadcrumbItems = ["Home", "Course Books"],
   pageTitle = "Course Books",
@@ -55,7 +58,7 @@ export default function ProductResults({
     toggleSortOpen,
   } = useProductResults({ products });
 
-  // Fetch products from API
+  // Fetch products from API with current filters and sorting
   const fetchProducts = async (isFilterChange = false) => {
     if (isFilterChange) {
       setFilterLoading(true);

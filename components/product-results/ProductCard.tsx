@@ -1,5 +1,7 @@
 import React from "react";
 
+// Core product data structure used throughout the application
+// Defines the shape of product data from the database
 export interface Product {
   id: number;
   title: string;
@@ -16,6 +18,9 @@ interface ProductCardProps {
   onProductClick: (product: Product) => void;
 }
 
+// Displays individual product information in a clickable card format
+// Handles product image display with fallback for missing images
+// Shows product details: title, author (if available), price, and condition
 export default function ProductCard({ product, onProductClick }: ProductCardProps) {
   return (
     <button
