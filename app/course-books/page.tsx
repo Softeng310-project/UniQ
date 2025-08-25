@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+// Course books landing page displaying degree categories
+// Allows users to browse course books by university degree programs
 export default function CourseBooks() {
   const router = useRouter();
 

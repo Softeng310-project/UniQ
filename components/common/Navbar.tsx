@@ -8,6 +8,8 @@ import { useState } from "react";
 type MenuColumns = string[][];
 type Item = { name: string; path: string; menu?: MenuColumns };
 
+// Search bar component with dynamic styling based on focus state
+// Provides search functionality with clear button and accessibility features
 export function SearchBar() {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
@@ -57,6 +59,8 @@ export function SearchBar() {
   );
 }
 
+// Top navigation bar with search, logo, and user actions
+// Contains search functionality, branding, and account/cart links
 export function TopBar() {
   return (
     <div className="bg-[#6E8EBE] h-24 text-white flex items-center justify-between px-6">
@@ -92,7 +96,8 @@ export function TopBar() {
   )
 }
 
-
+// Bottom navigation bar with main menu categories and dropdowns
+// Handles navigation between different product categories with hover menus
 export function BottomBar() {
   const pathname = usePathname();
   const [hovered, setHovered] = useState<string | null>(null);
@@ -243,6 +248,7 @@ export function BottomBar() {
   );
 }
 
+// Main navbar component combining top and bottom navigation bars
 export default function Navbar() {
   return (
     <div>

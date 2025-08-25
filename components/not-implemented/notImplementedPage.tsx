@@ -1,3 +1,5 @@
+// Not implemented page component for features under development
+// Displays placeholder content for pages that haven't been built yet
 export default function NotImplemented() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 relative overflow-hidden">

@@ -1,5 +1,7 @@
+/* Import Mandali font from Google Fonts for consistent typography */
 @import url('https://fonts.googleapis.com/css2?family=Mandali&display=swap');
 
+/* Tailwind CSS base styles and utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

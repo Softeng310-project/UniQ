@@ -1,10 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 
+// Book details page displaying individual book information
+// Shows book cover, price, description, and quantity controls for purchase
 export default function BookDetails({ params }: { params: { id: string } }) {
   const [book, setBook] = useState<any>(null);
   const [quantity, setQuantity] = useState<number>(1);
 
+  // Fetch book data from API based on ID
   useEffect(() => {
     fetch(`/api/books/${params.id}`)
       .then(async (res) => {

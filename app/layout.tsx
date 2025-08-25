@@ -6,11 +6,14 @@ import Footer from '@/components/common/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
+// Application metadata for SEO and browser display
 export const metadata: Metadata = {
   title: 'UniQ - University Marketplace',
   description: 'A centralised marketplace for UoA students',
 }
 
+// Root layout component that wraps all pages
+// Provides consistent header (navbar) and footer across the application
 export default function RootLayout({
   children,
 }: {

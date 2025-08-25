@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 
+// Legal page component displaying terms of use and privacy policy
+// Provides legal information and data protection details for users
 export default function LegalPage() {
   return (
     <main className="max-w-2xl mx-auto py-12 px-4">
@@ -26,7 +28,7 @@ export default function LegalPage() {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Limitation of Liability</h2>
         <p>
-          UniQ’s liability is limited to the maximum extent permitted by law. We are not liable for any third-party services or external websites linked to or from UniQ, nor are we responsible for the privacy practices or content of those sites.
+          UniQ's liability is limited to the maximum extent permitted by law. We are not liable for any third-party services or external websites linked to or from UniQ, nor are we responsible for the privacy practices or content of those sites.
         </p>
       </section>
       <section className="mb-8">

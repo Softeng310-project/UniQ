@@ -9,6 +9,8 @@ interface CourseBooksDegreePageProps {
   };
 }
 
+// Dynamic page for specific degree course books
+// Reuses ProductResults component with degree-specific configuration
 export default function CourseBooksDegree({ params }: CourseBooksDegreePageProps) {
   // Convert degree from URL format to display format
   const formatDegree = (degree: string) => {

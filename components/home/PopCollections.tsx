@@ -10,6 +10,8 @@ export function Title() {
     );
 }
 
+// Grid of popular product categories with hover effects
+// Displays different product types with images and navigation links
 export function Collections() {
   const items = [
     { src: "/assets/WritingSupplies.webp", alt: "Writing Supplies", path: "/not-implemented" },
@@ -60,9 +62,7 @@ export function Collections() {
   );
 }
 
-
-
-
+// Main Popular Collections component combining title and grid
 export default function PopCollections() {
   return (
     <div>

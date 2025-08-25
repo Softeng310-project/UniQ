@@ -1,3 +1,5 @@
+// 404 Not Found page with custom styling
+// Displays error message when users navigate to non-existent pages
 export default function NotFound() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 relative overflow-hidden">

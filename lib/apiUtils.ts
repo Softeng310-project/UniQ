@@ -2,6 +2,7 @@ import Book from "@/models/Book";
 import mongoose from "mongoose";
 import clientPromise from "@/lib/mongodb";
 
+// Type definitions for API query parameters and responses
 export interface QueryParams {
   category?: string | null;
   condition?: string | null;
@@ -43,6 +44,7 @@ export interface ApiResponse {
   filters: FilterData;
 }
 
+// Ensures MongoDB connection is established before API operations
 export async function ensureDatabaseConnection() {
   await clientPromise;
   if (!mongoose.connection.readyState) {
@@ -50,6 +52,7 @@ export async function ensureDatabaseConnection() {
   }
 }
 
+// Extracts query parameters from URL search params
 export function extractQueryParams(searchParams: URLSearchParams): QueryParams {
   return {
     category: searchParams.get('category'),
@@ -63,6 +66,8 @@ export function extractQueryParams(searchParams: URLSearchParams): QueryParams {
   };
 }
 
+// Builds MongoDB filter object from query parameters
+// Handles multiple values for categories, conditions, and years
 export function buildFilter(params: QueryParams): any {
   const filter: any = {};
   
@@ -102,6 +107,7 @@ export function buildFilter(params: QueryParams): any {
   return filter;
 }
 
+// Builds MongoDB sort object from sort parameter
 export function buildSort(sortBy: string = 'title'): SortOptions {
   const sort: SortOptions = {};
   
@@ -125,12 +131,15 @@ export function buildSort(sortBy: string = 'title'): SortOptions {
   return sort;
 }
 
+// Extracts pagination parameters from query params
 export function getPaginationParams(params: QueryParams) {
   const page = parseInt(params.page || '1');
   const limit = parseInt(params.limit || '12');
   return { page, limit };
 }
 
+// Fetches books data with filtering, sorting, and pagination
+// Returns books, total count, and available filter options
 export async function fetchBooksData(
   filter: any,
   sort: SortOptions,
@@ -161,6 +170,7 @@ export async function fetchBooksData(
   return { books, total, categories, majors, years };
 }
 
+// Creates pagination information object
 export function createPaginationInfo(total: number, page: number, limit: number): PaginationInfo {
   return {
     currentPage: page,
@@ -170,14 +180,17 @@ export function createPaginationInfo(total: number, page: number, limit: number)
   };
 }
 
+// Creates filter data object with available options
 export function createFilterData(categories: string[], majors: string[], years: number[]): FilterData {
   return { categories, majors, years };
 }
 
+// Creates standardized error response
 export function createErrorResponse(message: string, status: number = 500) {
   return Response.json({ error: message }, { status });
 }
 
+// Creates standardized success response
 export function createSuccessResponse(data: any, additionalFields?: Record<string, any>) {
   return Response.json({
     ...data,

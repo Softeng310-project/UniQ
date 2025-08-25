@@ -1,5 +1,7 @@
 import { MdInfoOutline, MdGavel, MdEmail, MdPhone, MdAccountCircle, MdOutlineShoppingCart } from "react-icons/md";
 
+// Footer component with contact information and navigation links
+// Provides about us, customer service, and account management links
 export default function Footer() {
   return (
     <footer className="w-full mt-12">

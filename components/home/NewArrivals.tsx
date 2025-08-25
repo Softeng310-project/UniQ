@@ -5,6 +5,9 @@ import Link from "next/link";
 
 const defaultImage = "/assets/NoteBooks.webp";
 
+// New Arrivals carousel component for displaying latest products
+// Features smooth sliding animation and navigation controls
+// Fetches newest books from API and displays them in a horizontal scroll
 export default function NewArrivals() {
   const [items, setItems] = useState<{ id: number; title: string; price: number; image: string }[]>([]);
   const [startIdx, setStartIdx] = useState(0);
@@ -12,6 +15,7 @@ export default function NewArrivals() {
   const [animate, setAnimate] = useState(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Fetch newest books from API on component mount
   useEffect(() => {
     fetch("/api/books/newest")
       .then((res) => res.json())
@@ -27,6 +31,7 @@ export default function NewArrivals() {
       });
   }, []);
 
+  // Carousel configuration and visible items calculation
   const visibleCount = 5;
   const cardWidthVW = 27;
   const extraLeft = 2;
@@ -37,6 +42,7 @@ export default function NewArrivals() {
       : { id: 0, title: "", price: 0, image: defaultImage }
   );
 
+  // Transform calculation for smooth sliding animation
   const baseShift = -(cardWidthVW * extraLeft);
   const transform =
     offset === 1
@@ -45,6 +51,7 @@ export default function NewArrivals() {
       ? `translateX(${baseShift - cardWidthVW}vw)`
       : `translateX(${baseShift}vw)`;
 
+  // Handle sliding animation with proper timing and state management
   const slide = (dir: "left" | "right") => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setAnimate(true);
