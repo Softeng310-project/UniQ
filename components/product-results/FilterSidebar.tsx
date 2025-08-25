@@ -8,6 +8,8 @@ interface FilterSidebarProps {
   onCategoryToggle: (category: string) => void;
   onConditionToggle: (condition: string) => void;
   categoryLabel?: string;
+  // Year filter UI only, no logic yet
+  // You can add selectedYear and onYearToggle props later for full functionality
 }
 
 export default function FilterSidebar({
@@ -19,8 +21,11 @@ export default function FilterSidebar({
   onConditionToggle,
   categoryLabel = "Categories"
 }: FilterSidebarProps) {
+  // Year options for filter UI
+  const yearOptions = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
   return (
     <aside className="w-65 pr-6">
+      {/* Majors filter */}
       <div className="mb-6">
         <h2 className="font-light text-[#556C8E] mb-2 text-xl">{categoryLabel}</h2>
         <div className="space-y-1">
@@ -39,6 +44,25 @@ export default function FilterSidebar({
         </div>
       </div>
 
+      {/* Year filter UI (between Majors and Condition) */}
+      <div className="mb-6">
+        <h2 className="font-light text-[#4D6890] mb-2 text-xl">Year</h2>
+        <div className="space-y-1">
+          {yearOptions.map((year) => (
+            <label key={year} className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                // checked logic and onChange to be implemented later
+                className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
+                aria-label={`Filter by ${year}`}
+              />
+              <span className="text-[#556C8E] font-mandali">{year}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Condition filter */}
       <div>
         <h2 className="font-light text-[#4D6890] mb-2 text-xl">Condition</h2>
         <div className="space-y-1">
