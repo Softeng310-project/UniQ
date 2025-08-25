@@ -112,14 +112,15 @@ We would like to be able to get UniQ up and running before the start of the **20
 ### Front-End:
 
 - React
-- HTML
+- Next.js 14 
+- TypeScript
 - Tailwind CSS
 
 ### Back-End:
 
-- TypeScript
-- Next.js
-- MongoDB
+- MongoDB (native driver)
+- Mongoose
+- Next.js API routes
 
 ## Ground Rules. 🪨
 

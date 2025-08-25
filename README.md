@@ -2,13 +2,13 @@
 
 UniQ is a centralised marketplace for University of Auckland students, designed to fill the gap left behind by the liquidation of UBIQ. It provides a simple and accessible platform for students to buy and sell course-related books and resources.
 
-## 📖 What does this project do?
+## What does this project do?
 **UniQ makes it easy for UoA students to:**
 - Browse course-specific textbooks and materials
 - Search for books by keyword or course code
 - View detailed book information (including pricing)
 
-## 🌟 Why is this project useful?
+## Why is this project useful?
 - Helps students save money by finding affordable textbooks
 - Provides a centralised place for student-to-student sales
 - Encourages sustainability by re-using and reselling study materials
@@ -18,21 +18,23 @@ UniQ is a centralised marketplace for University of Auckland students, designed 
 
 **Frontend:**
 - React
-- Next.js 14 (App Router)
+- Next.js 14 
 - TypeScript
 - Tailwind CSS
 
 **Backend:**
 - MongoDB (native driver)
+- Mongoose
+- Next.js API routes
 
-## 🚀 Getting Started
+## Getting Started
 
-**✅ Prerequisites**
+**Prerequisites**
 - Node.js 
 - npm (comes with Node)
 - MongoDB connection string (Atlas or local instance)
 
-**⚙️ Installation**
+**Installation**
 
 1. **Clone the repository**
    ```bash
@@ -84,11 +86,11 @@ UniQ is a centralised marketplace for University of Auckland students, designed 
 
 ## Features
 
-- 📚 Browse books by course
-- 🔍 Search for specific textbooks
-- 📖 Detailed book information
-- 🚧 "Not Implemented" placeholder pages
-- 👤 Planned: user accounts and order history
+- Browse books by course
+- Search for specific textbooks
+- Detailed book information
+- "Not Implemented" placeholder pages
+- Planned: user accounts and order history
 
 ## Available Scripts
 
@@ -97,9 +99,9 @@ UniQ is a centralised marketplace for University of Auckland students, designed 
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 
-## 📚 How can the software be used?
+## How can the software be used?
 This project is licensed under the MIT License; a permissive open-source license.
 You are free to use, modify, and distribute this software as long as the original license is included.
 
-## 📄 License
+## License
 This project is licensed under the MIT License. [MIT License](https://opensource.org/license/mit/)
