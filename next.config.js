@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Add your Next.js config options here
+  // Next.js configuration for UniQ marketplace application
+  // Add custom configuration options here as needed
 }
 
 module.exports = nextConfig

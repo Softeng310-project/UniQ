@@ -15,6 +15,8 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
+// MongoDB connection setup with development optimization
+// Reuses connection in development to prevent multiple connections
 if (process.env.NODE_ENV === 'development') {
   if (!global._mongoClientPromise) {
     client = new MongoClient(uri, options);

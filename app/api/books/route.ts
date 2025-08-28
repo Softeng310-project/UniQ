@@ -11,6 +11,8 @@ import {
   createSuccessResponse
 } from "@/lib/apiUtils";
 
+// API route for fetching books with filtering, sorting, and pagination
+// Supports query parameters for category, condition, major, degree, year, and sorting
 export async function GET(request: Request) {
   await ensureDatabaseConnection();
 

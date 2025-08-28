@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 
+// About page component displaying company information and mission
+// Provides background on UniQ marketplace and team information
 export default function AboutPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
@@ -10,7 +12,7 @@ export default function AboutPage() {
           Welcome to UniQ – a student-driven initiative designed to make campus life easier.
         </p>
         <p>
-          When UBIQ, the University of Auckland’s central hub for coursebooks and stationery, announced its closure, students faced the challenge of losing quick access to essential academic supplies. Our team saw this as an opportunity to step in and build a solution tailored for students, by students.
+          When UBIQ, the University of Auckland's central hub for coursebooks and stationery, announced its closure, students faced the challenge of losing quick access to essential academic supplies. Our team saw this as an opportunity to step in and build a solution tailored for students, by students.
         </p>
         <p>
           At UniQ, our mission is simple: to bring back the convenience of having all your university essentials in one place – now made even easier through a modern, user-friendly website. From textbooks and refill pads to pens, binders, and graph paper, we provide everything you need, delivered right to your door.
@@ -31,7 +33,7 @@ export default function AboutPage() {
           <li><strong>Convenience</strong> – Save time, order online, and focus on what matters most</li>
         </ul>
         <p>
-          Through UniQ, we hope to support every student’s academic journey with the tools they need to succeed.
+          Through UniQ, we hope to support every student's academic journey with the tools they need to succeed.
         </p>
         <hr className="my-8" />
         <p>

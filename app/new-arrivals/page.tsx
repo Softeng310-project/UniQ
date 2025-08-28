@@ -10,12 +10,15 @@ import { sortOptions } from "../../lib/productResultsUtils";
 import { useProductResults } from "../../hooks/useProductResults";
 import { useRouter } from "next/navigation";
 
+// New arrivals page displaying latest products
+// Fetches newest books and provides sorting and pagination functionality
 export default function NewArrivalsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const defaultSort = "Date added, newest to oldest";
   const breadcrumbItems = ["Home", "New Arrivals"];
   const pageTitle = "New Arrivals";
 
+  // Fetch newest books from API
   useEffect(() => {
     fetch("/api/books/newest?limit=16")
       .then(res => res.json())
@@ -33,6 +36,7 @@ export default function NewArrivalsPage() {
     toggleSortOpen,
   } = useProductResults({ products });
 
+  // Set default sort to newest first
   useEffect(() => {
     setSortBy(defaultSort);
   }, []);
