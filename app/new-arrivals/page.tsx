@@ -9,13 +9,14 @@ import { Product } from "../../components/product-results/ProductCard";
 import { sortOptions } from "../../lib/productResultsUtils";
 import { useProductResults } from "../../hooks/useProductResults";
 import { useRouter } from "next/navigation";
+import { generateNewArrivalsBreadcrumbs } from "../../lib/breadcrumbUtils";
 
 // New arrivals page displaying latest products
 // Fetches newest books and provides sorting and pagination functionality
 export default function NewArrivalsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const defaultSort = "Date added, newest to oldest";
-  const breadcrumbItems = ["Home", "New Arrivals"];
+  const breadcrumbItems = generateNewArrivalsBreadcrumbs();
   const pageTitle = "New Arrivals";
 
   // Fetch newest books from API

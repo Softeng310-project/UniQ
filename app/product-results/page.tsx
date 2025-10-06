@@ -11,19 +11,29 @@ import { Product } from "../../components/product-results/ProductCard";
 import { useProductResults } from "../../hooks/useProductResults";
 import { conditions, sortOptions, transformDatabaseProduct, getProductTypeConfig, ProductType } from "../../lib/productResultsUtils";
 
+// Interface for breadcrumb items (matches utility interface)
+interface BreadcrumbItem {
+  label: string;  // Text to display
+  href?: string;  // Optional link - if provided, item becomes clickable
+}
+
 interface ProductResultsPageProps {
   // Props for dynamic content
-  breadcrumbItems?: string[];
-  pageTitle?: string;
-  productType?: ProductType;
-  degree?: string;
+  breadcrumbItems?: BreadcrumbItem[];  // Breadcrumb navigation items
+  pageTitle?: string;                  // Page title to display
+  productType?: ProductType;           // Type of products to display
+  degree?: string;                     // Optional degree filter
 }
 
 // Main product results page that displays filtered and paginated product listings
 // Handles API data fetching, filtering, sorting, and pagination
 // Supports different product types (course books, notebooks, writing supplies)
 export default function ProductResults({ 
-  breadcrumbItems = ["Home", "Course Books"],
+  // Default breadcrumbs for course books (can be overridden by parent components)
+  breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Course Books" }
+  ],
   pageTitle = "Course Books",
   productType = "course-books",
   degree

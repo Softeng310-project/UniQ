@@ -2,6 +2,7 @@
 
 import React from "react";
 import ProductResults from "../../product-results/page";
+import { generateCourseBooksBreadcrumbs } from "../../../lib/breadcrumbUtils";
 
 interface CourseBooksDegreePageProps {
   params: {
@@ -21,10 +22,11 @@ export default function CourseBooksDegree({ params }: CourseBooksDegreePageProps
   };
 
   const degreeName = formatDegree(params.degree);
-  
+  const breadcrumbItems = generateCourseBooksBreadcrumbs(params.degree);
+
   return (
     <ProductResults 
-      breadcrumbItems={["Home", "Course Books", degreeName]}
+      breadcrumbItems={breadcrumbItems}
       pageTitle={`${degreeName} Course Books`}
       productType="course-books"
       degree={params.degree}
