@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Breadcrumb from "../../../components/product-results/Breadcrumb";
+import { generateBookDetailsBreadcrumbs } from "../../../lib/breadcrumbUtils";
 
 // Book details page displaying individual book information
 // Shows book cover, price, description, and quantity controls for purchase
@@ -27,12 +29,15 @@ export default function BookDetails({ params }: { params: { id: string } }) {
   const handleDecrease = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
   const handleIncrease = () => setQuantity((q) => q + 1);
 
+  // Generate breadcrumb items based on book data
+  const getBreadcrumbItems = () => generateBookDetailsBreadcrumbs(book);
+
   return (
-    <div className="px-8 py-6 max-w-5xl mx-auto">
+    <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 mb-6">
-        Home {'>'} Course Books {'>'} Engineering {'>'} {book.major} {'>'} {book.year} {'>'} {book.title}
-      </nav>
+      <Breadcrumb items={getBreadcrumbItems()} title={book?.title || "Book Details"} />
+      
+      <div className="px-8 py-6 max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row gap-10">
         {/* Book Cover */}
         <div className="flex-shrink-0">
@@ -82,6 +87,7 @@ export default function BookDetails({ params }: { params: { id: string } }) {
             <div className="text-gray-600 text-base leading-relaxed">{book.description}</div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

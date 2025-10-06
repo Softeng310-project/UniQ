@@ -1,7 +1,13 @@
 import React from "react";
+import Link from "next/link";
+
+interface BreadcrumbItem {
+  label: string;  // Display text
+  href?: string;  // Optional route (if not provided, item is not clickable)
+}
 
 interface BreadcrumbProps {
-  items: string[];
+  items: BreadcrumbItem[];
   title: string;
 }
 
@@ -13,7 +19,16 @@ export default function Breadcrumb({ items, title }: BreadcrumbProps) {
     <div className="pl-16 py-6 text-sm text-[#2A4163]">
       {items.map((item, index) => (
         <React.Fragment key={index}>
-          <span>{item}</span>
+          {item.href ? (
+            <Link 
+              href={item.href}
+              className="hover:text-blue-600 hover:underline transition-colors cursor-pointer"
+            >
+              {item.label}
+            </Link>
+          ) : (
+            <span className="text-gray-500 cursor-default">{item.label}</span>
+          )}
           {index < items.length - 1 && <span className="mx-2">&gt;</span>}
         </React.Fragment>
       ))}

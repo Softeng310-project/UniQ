@@ -11,9 +11,14 @@ import { Product } from "../../components/product-results/ProductCard";
 import { useProductResults } from "../../hooks/useProductResults";
 import { conditions, sortOptions, transformDatabaseProduct, getProductTypeConfig, ProductType } from "../../lib/productResultsUtils";
 
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
 interface ProductResultsPageProps {
   // Props for dynamic content
-  breadcrumbItems?: string[];
+  breadcrumbItems?: BreadcrumbItem[];
   pageTitle?: string;
   productType?: ProductType;
   degree?: string;
@@ -23,7 +28,10 @@ interface ProductResultsPageProps {
 // Handles API data fetching, filtering, sorting, and pagination
 // Supports different product types (course books, notebooks, writing supplies)
 export default function ProductResults({ 
-  breadcrumbItems = ["Home", "Course Books"],
+  breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Course Books" }
+  ],
   pageTitle = "Course Books",
   productType = "course-books",
   degree

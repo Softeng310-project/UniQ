@@ -2,11 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Breadcrumb from "../../components/product-results/Breadcrumb";
 
 // Course books landing page displaying degree categories
 // Allows users to browse course books by university degree programs
 export default function CourseBooks() {
   const router = useRouter();
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Course Books" } // No href = not clickable
+  ];
+  const pageTitle = "Course Books";
 
   const degrees = [
     { name: "Arts", image: "/assets/uoa_textbooks_arts.webp" },
@@ -34,9 +40,13 @@ export default function CourseBooks() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-14">
-      {/* Title with underline */}
-      <div className="text-center mb-12">
+    <div className="min-h-screen bg-white">
+      {/* Breadcrumb */}
+      <Breadcrumb items={breadcrumbItems} title={pageTitle} />
+      
+      <div className="py-14">
+        {/* Title with underline */}
+        <div className="text-center mb-12">
         <h1 className="text-2xl font-semibold text-gray-800 inline-block border-b-2 border-gray-300 pb-2">
           Shop by Degree
         </h1>
@@ -85,6 +95,7 @@ export default function CourseBooks() {
             </div>
           ))}
         </div>
+      </div>
       </div>
     </div>
   );
