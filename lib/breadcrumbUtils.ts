@@ -1,8 +1,10 @@
 // Utility functions for generating consistent breadcrumbs across the application
+// This file contains all breadcrumb generation logic to ensure consistency
 
+// Interface for breadcrumb items (matches the component interface)
 export interface BreadcrumbItem {
-  label: string;
-  href?: string;
+  label: string;  // Text to display
+  href?: string;  // Optional link - if provided, item becomes clickable
 }
 
 // Convert degree name to URL format
@@ -49,6 +51,7 @@ export const generateBookDetailsBreadcrumbs = (book: any): BreadcrumbItem[] => {
 };
 
 // Generate breadcrumbs for product results pages
+// Handles different product types (course books, notebooks, etc.)
 export const generateProductResultsBreadcrumbs = (
   productType: string, 
   degree?: string
@@ -57,6 +60,7 @@ export const generateProductResultsBreadcrumbs = (
     { label: "Home", href: "/" }
   ];
 
+  // Add product type specific breadcrumbs
   switch (productType) {
     case "course-books":
       breadcrumbs.push({ label: "Course Books", href: "/course-books" });

@@ -1,14 +1,16 @@
 import React from "react";
 import Link from "next/link";
 
+// Interface for individual breadcrumb items
 interface BreadcrumbItem {
-  label: string;  // Display text
-  href?: string;  // Optional route (if not provided, item is not clickable)
+  label: string;  // Text to display
+  href?: string;  // Optional link - if provided, item becomes clickable
 }
 
+// Props for the Breadcrumb component
 interface BreadcrumbProps {
-  items: BreadcrumbItem[];
-  title: string;
+  items: BreadcrumbItem[];  // Array of breadcrumb items
+  title: string;            // Page title displayed below breadcrumbs
 }
 
 // Displays navigation breadcrumbs and page title
