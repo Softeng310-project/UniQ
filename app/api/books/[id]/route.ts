@@ -15,5 +15,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
   if (!book) {
     return Response.json({ error: "Book not found" }, { status: 404 });
   }
+
+  // Increment view count after finding the book
+  await Book.updateOne({ id: Number(params.id) }, { $inc: { viewCount: 1 } });
+
   return Response.json(book);
 }
