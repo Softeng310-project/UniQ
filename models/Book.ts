@@ -12,6 +12,7 @@ const BookSchema = new mongoose.Schema({
   condition: String,
   price: Number,
   description: String,
+  viewCount: { type: Number, default: 0 },
 });
 
 // Export Book model with specific collection name
