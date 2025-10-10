@@ -46,7 +46,7 @@ export function filterAndSortProducts(
   selectedCategories: string[],
   selectedConditions: string[],
   selectedYears: string[],
-  sortBy: string
+  sortBy: string,
 ): Product[] {
   let filtered = products;
 

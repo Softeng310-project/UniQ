@@ -12,6 +12,8 @@ export interface QueryParams {
   page?: string | null;
   limit?: string | null;
   sortBy?: string | null;
+  minPrice?: string | null;
+  maxPrice?: string | null;
 }
 
 export interface FilterOptions {
@@ -20,6 +22,10 @@ export interface FilterOptions {
   major?: string;
   degree?: string;
   year?: number;
+  price?: {
+    $gte?: number;
+    $lte?: number;
+  };
 }
 
 export interface SortOptions {
@@ -62,7 +68,9 @@ export function extractQueryParams(searchParams: URLSearchParams): QueryParams {
     year: searchParams.get('year'),
     page: searchParams.get('page'),
     limit: searchParams.get('limit'),
-    sortBy: searchParams.get('sortBy')
+    sortBy: searchParams.get('sortBy'),
+    minPrice: searchParams.get('minPrice'),
+    maxPrice: searchParams.get('maxPrice')
   };
 }
 
@@ -101,6 +109,30 @@ export function buildFilter(params: QueryParams): any {
       filter.year = { $in: years };
     } else {
       filter.year = years[0];
+    }
+  }
+
+  // Handle price range filtering
+  if (params.minPrice !== null || params.maxPrice !== null) {
+    filter.price = {};
+    
+    if (params.minPrice !== null && params.minPrice !== undefined) {
+      const min = parseFloat(params.minPrice);
+      if (!isNaN(min)) {
+        filter.price.$gte = min;
+      }
+    }
+    
+    if (params.maxPrice !== null && params.maxPrice !== undefined) {
+      const max = parseFloat(params.maxPrice);
+      if (!isNaN(max)) {
+        filter.price.$lte = max;
+      }
+    }
+    
+    // If no valid price constraints were added, remove the price query
+    if (Object.keys(filter.price).length === 0) {
+      delete filter.price;
     }
   }
 
@@ -197,3 +229,27 @@ export function createSuccessResponse(data: any, additionalFields?: Record<strin
     ...additionalFields
   });
 }
+
+// Gets the minimum and maximum price from all books in the database
+// Useful for setting default price range slider values
+export async function getPriceRange() {
+  const result = await Book.aggregate([
+    {
+      $group: {
+        _id: null,
+        minPrice: { $min: "$price" },
+        maxPrice: { $max: "$price" }
+      }
+    }
+  ]);
+
+  if (result.length > 0) {
+    return {
+      minPrice: Math.floor(result[0].minPrice || 0),
+      maxPrice: Math.ceil(result[0].maxPrice || 1000)
+    };
+  }
+
+  return { minPrice: 0, maxPrice: 1000 };
+}
+
