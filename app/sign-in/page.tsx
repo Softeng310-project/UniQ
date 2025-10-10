@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type StatusState = {
   type: "success" | "error";
@@ -22,6 +23,7 @@ const initialSignUpForm = {
 // Sign-in page that provides both login and account creation forms
 // Each form talks to the corresponding auth API route with inline status feedback
 export default function SignInPage() {
+  const router = useRouter();
   const [signInForm, setSignInForm] = useState(initialSignInForm);
   const [signUpForm, setSignUpForm] = useState(initialSignUpForm);
   const [signInStatus, setSignInStatus] = useState<StatusState>(null);
@@ -52,6 +54,8 @@ export default function SignInPage() {
 
       setSignInStatus({ type: "success", message: data.message || "Signed in successfully." });
       setSignInForm(initialSignInForm);
+      router.push("/account");
+      router.refresh();
     } catch (error) {
       console.error("Sign in error:", error);
       setSignInStatus({ type: "error", message: "Unexpected error while signing in." });

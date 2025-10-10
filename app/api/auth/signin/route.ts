@@ -1,7 +1,8 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import User from "@/models/User";
 import { ensureDatabaseConnection } from "@/lib/apiUtils";
+import { getAuthCookieName, getAuthCookieOptions, signAuthToken, TOKEN_TTL } from "@/lib/auth";
 
 interface SigninPayload {
   email?: string;
@@ -32,7 +33,12 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
-    return Response.json({
+    const token = await signAuthToken({
+      id: user._id.toString(),
+      email: user.email,
+    });
+
+    const response = NextResponse.json({
       message: "Signed in successfully.",
       user: {
         id: user._id.toString(),
@@ -40,7 +46,12 @@ export async function POST(request: NextRequest) {
         firstName: user.firstName,
         lastName: user.lastName,
       },
+      expiresIn: TOKEN_TTL,
     });
+
+    response.cookies.set(getAuthCookieName(), token, getAuthCookieOptions());
+
+    return response;
   } catch (error) {
     console.error("Signin error:", error);
     return Response.json({ error: "Failed to sign in." }, { status: 500 });

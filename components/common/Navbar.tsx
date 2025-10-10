@@ -83,7 +83,7 @@ export function TopBar() {
 
       {/* Right - Account + Cart */}
       <div className="flex items-center space-x-6">
-        <Link href="/sign-in" className="flex items-center space-x-2 cursor-pointer"> 
+        <Link href="/account" className="flex items-center space-x-2 cursor-pointer"> 
           <span>Account</span>
           <MdAccountCircle size={30} />
         </Link>
