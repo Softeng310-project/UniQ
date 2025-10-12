@@ -5,15 +5,24 @@ import { filterAndSortProducts, paginateProducts, sortOptions } from "../lib/pro
 interface UseProductResultsProps {
   products: Product[];
   itemsPerPage?: number;
+  initialCategories?: string[];
+  initialConditions?: string[];
+  initialYears?: string[];
 }
 
 // Main hook for managing product results state and interactions
 // Handles filtering, sorting, pagination, and UI state for product listings
 // Provides all necessary state and actions for product results pages
-export function useProductResults({ products, itemsPerPage = 16 }: UseProductResultsProps) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
-  const [selectedYears, setSelectedYears] = useState<string[]>([]);
+export function useProductResults({ 
+  products, 
+  itemsPerPage = 16, 
+  initialCategories = [], 
+  initialConditions = [], 
+  initialYears = [] 
+}: UseProductResultsProps) {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
+  const [selectedConditions, setSelectedConditions] = useState<string[]>(initialConditions);
+  const [selectedYears, setSelectedYears] = useState<string[]>(initialYears);
   const [sortBy, setSortBy] = useState(sortOptions[0]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortOpen, setSortOpen] = useState(false);
