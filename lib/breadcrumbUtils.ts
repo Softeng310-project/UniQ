@@ -89,3 +89,27 @@ export const generateNewArrivalsBreadcrumbs = (): BreadcrumbItem[] => {
     { label: "New Arrivals" } // Not clickable
   ];
 };
+
+// Generate breadcrumbs for notebooks & pads page
+export const generateNotebooksBreadcrumbs = (): BreadcrumbItem[] => {
+  return [
+    { label: "Home", href: "/" },
+    { label: "Notebooks & Pads" } // Not clickable
+  ];
+};
+
+// Generate breadcrumbs for writing supplies page
+export const generateWritingSuppliesBreadcrumbs = (): BreadcrumbItem[] => {
+  return [
+    { label: "Home", href: "/" },
+    { label: "Writing Supplies" } // Not clickable
+  ];
+};
+
+// Generate breadcrumbs for other page
+export const generateOtherBreadcrumbs = (): BreadcrumbItem[] => {
+  return [
+    { label: "Home", href: "/" },
+    { label: "Other" } // Not clickable
+  ];
+};
