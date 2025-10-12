@@ -53,6 +53,15 @@ export default function ProductResults({
     itemsPerPage: 12
   });
 
+  // Extract URL parameters for initial filters (reactive to URL changes)
+  const urlCategory = searchParams.get('category');
+  const urlCondition = searchParams.get('condition');
+  const urlYear = searchParams.get('year');
+  
+  const initialCategories = urlCategory ? [urlCategory] : [];
+  const initialConditions = urlCondition ? [urlCondition] : [];
+  const initialYears = urlYear ? [urlYear] : [];
+
   const {
     selectedCategories,
     selectedConditions,
@@ -66,7 +75,12 @@ export default function ProductResults({
     toggleCondition,
     toggleYear,
     toggleSortOpen,
-  } = useProductResults({ products });
+  } = useProductResults({ 
+    products, 
+    initialCategories, 
+    initialConditions, 
+    initialYears 
+  });
 
   // Fetch products from API with current filters and sorting
   const fetchProducts = async (isFilterChange = false) => {
@@ -124,7 +138,8 @@ export default function ProductResults({
       if (selectedYears.length > 0) {
         // Convert year strings to numbers (e.g., "1st Year" -> 1)
         const yearNumbers = selectedYears.map(year => {
-          const match = year.match(/(\d+)/);
+          const regex = /(\d+)/;
+          const match = regex.exec(year);
           return match ? match[1] : '1';
         });
         params.append('year', yearNumbers.join(','));
@@ -222,6 +237,8 @@ export default function ProductResults({
           onConditionToggle={toggleCondition}
           onYearToggle={toggleYear}
           categoryLabel={getProductTypeConfig(productType).categoryLabel}
+          showYearFilter={productType === "course-books"}
+          showConditionFilter={productType === "course-books"}
         />
 
         {/* Main section */}

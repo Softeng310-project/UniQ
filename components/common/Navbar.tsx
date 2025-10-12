@@ -118,8 +118,7 @@ export function BottomBar() {
     },
     {
       name: "Notebooks & Pads",
-      // Change to /notebooks when implemented
-      path: "/not-implemented",
+      path: "/notebooks-and-pads",
       menu: [
         ["A4 Pads", "A5 Pads", "Dot Grid"],
         ["Hardcover Notebooks", "Softcover Notebooks"],
@@ -128,8 +127,7 @@ export function BottomBar() {
     },
     {
       name: "Writing Supplies",
-      // Change to /writing-supplies when implemented
-      path: "/not-implemented",
+      path: "/writing-supplies",
       menu: [
         ["Ballpoint", "Gel", "Fountain"],
         ["Highlighters", "Fineliners"],
@@ -138,8 +136,7 @@ export function BottomBar() {
     },
     {
       name: "Other",
-      // Change to /other when implemented
-      path: "/not-implemented",
+      path: "/other",
       menu: [
         ["Calculators", "Rulers"],
         ["Folders & Files", "Binders"],
@@ -183,7 +180,13 @@ export function BottomBar() {
       <div className="bg-[#FFDBC2] h-14 flex justify-center items-center gap-10">
         {items.map((item) => {
           const isActive = item.name === "Course Books" 
-            ? pathname.startsWith("/course-books") || pathname === "/not-implemented"
+            ? pathname.startsWith("/course-books")
+            : item.name === "Notebooks & Pads"
+            ? pathname === "/notebooks-and-pads"
+            : item.name === "Writing Supplies"
+            ? pathname === "/writing-supplies"
+            : item.name === "Other"
+            ? pathname === "/other"
             : isActivePath(item.path);
           const hasMenu = !!item.menu;
 
@@ -230,6 +233,12 @@ export function BottomBar() {
                         href={
                           current.name === "Course Books" 
                             ? `/course-books/${getDegreeSlug(label)}`
+                            : current.name === "Notebooks & Pads"
+                            ? `/notebooks-and-pads?category=${encodeURIComponent(label)}`
+                            : current.name === "Writing Supplies"
+                            ? `/writing-supplies?category=${encodeURIComponent(label)}`
+                            : current.name === "Other"
+                            ? `/other?category=${encodeURIComponent(label)}`
                             : "/not-implemented"
                         }
                         className="hover:underline"

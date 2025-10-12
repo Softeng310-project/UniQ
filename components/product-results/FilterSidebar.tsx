@@ -10,6 +10,8 @@ interface FilterSidebarProps {
   onConditionToggle: (condition: string) => void;
   onYearToggle?: (year: string) => void;
   categoryLabel?: string;
+  showYearFilter?: boolean;
+  showConditionFilter?: boolean;
 }
 
 // Provides filtering controls for product search results
@@ -24,7 +26,9 @@ export default function FilterSidebar({
   onCategoryToggle,
   onConditionToggle,
   onYearToggle,
-  categoryLabel = "Categories"
+  categoryLabel = "Categories",
+  showYearFilter = true,
+  showConditionFilter = true
 }: FilterSidebarProps) {
   // Year options for filter UI
   const yearOptions = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
@@ -50,43 +54,47 @@ export default function FilterSidebar({
         </div>
       </div>
 
-      {/* Year filter */}
-      <div className="mb-6">
-        <h2 className="font-light text-[#4D6890] mb-2 text-xl">Year</h2>
-        <div className="space-y-1">
-          {yearOptions.map((year) => (
-            <label key={year} className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={selectedYears.includes(year)}
-                onChange={() => onYearToggle?.(year)}
-                className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
-                aria-label={`Filter by ${year}`}
-              />
-              <span className="text-[#556C8E] font-mandali">{year}</span>
-            </label>
-          ))}
+      {/* Year filter - only show for course books */}
+      {showYearFilter && (
+        <div className="mb-6">
+          <h2 className="font-light text-[#4D6890] mb-2 text-xl">Year</h2>
+          <div className="space-y-1">
+            {yearOptions.map((year) => (
+              <label key={year} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={selectedYears.includes(year)}
+                  onChange={() => onYearToggle?.(year)}
+                  className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
+                  aria-label={`Filter by ${year}`}
+                />
+                <span className="text-[#556C8E] font-mandali">{year}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Condition filter */}
-      <div>
-        <h2 className="font-light text-[#4D6890] mb-2 text-xl">Condition</h2>
-        <div className="space-y-1">
-          {conditions.map((condition) => (
-            <label key={condition} className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={selectedConditions.includes(condition)}
-                onChange={() => onConditionToggle(condition)}
-                className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
-                aria-label={`Filter by ${condition} condition`}
-              />
-              <span className="text-[#556C8E] font-mandali">{condition}</span>
-            </label>
-          ))}
+      {/* Condition filter - only show for course books */}
+      {showConditionFilter && (
+        <div>
+          <h2 className="font-light text-[#4D6890] mb-2 text-xl">Condition</h2>
+          <div className="space-y-1">
+            {conditions.map((condition) => (
+              <label key={condition} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={selectedConditions.includes(condition)}
+                  onChange={() => onConditionToggle(condition)}
+                  className="h-6 w-6 text-blue-600 border-gray-400 border rounded cursor-pointer checked:bg-blue-400 checked:border-blue-400 appearance-none hover:cursor-pointer"
+                  aria-label={`Filter by ${condition} condition`}
+                />
+                <span className="text-[#556C8E] font-mandali">{condition}</span>
+              </label>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </aside>
   );
 }
