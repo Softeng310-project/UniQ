@@ -13,6 +13,8 @@ interface FilterSidebarProps {
   onYearToggle?: (year: string) => void;
   onPriceChange?: (min: number | undefined, max: number | undefined) => void;
   categoryLabel?: string;
+  showYearFilter?: boolean;
+  showConditionFilter?: boolean;
 }
 
 interface FilterSectionProps {
@@ -67,7 +69,9 @@ export default function FilterSidebar({
   onConditionToggle,
   onYearToggle,
   onPriceChange,
-  categoryLabel = "Categories"
+  categoryLabel = "Categories",
+  showYearFilter = true,
+  showConditionFilter = true
 }: FilterSidebarProps) {
   // Year options for filter UI
   const yearOptions = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
@@ -126,13 +130,16 @@ export default function FilterSidebar({
       />
 
       {/* Year filter */}
-      <FilterSection
-        title="Year"
-        options={yearOptions}
-        selectedOptions={selectedYears}
-        onToggle={onYearToggle || (() => {})}
-        labelSuffix="year"
-      />
+      {showYearFilter && (
+        <FilterSection
+          title="Year"
+          options={yearOptions}
+          selectedOptions={selectedYears}
+          onToggle={onYearToggle || (() => {})}
+          labelSuffix="year"
+        />
+      )}
+      
 
       {/* Price filter */}
       <div className="mb-6">
@@ -198,13 +205,16 @@ export default function FilterSidebar({
       </div>
 
       {/* Condition filter */}
-      <FilterSection
-        title="Condition"
-        options={conditions}
-        selectedOptions={selectedConditions}
-        onToggle={onConditionToggle}
-        labelSuffix="condition"
-      />
+      {/* Condition filter - only show for course books */}
+      {showConditionFilter && (
+        <FilterSection
+          title="Condition"
+          options={conditions}
+          selectedOptions={selectedConditions}
+          onToggle={onConditionToggle}
+          labelSuffix="condition"
+        />
+      )}
     </aside>
   );
 }

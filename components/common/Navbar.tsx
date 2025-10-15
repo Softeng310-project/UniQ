@@ -4,6 +4,7 @@ import Link from "next/link";
 import { MdAccountCircle, MdOutlineShoppingCart , MdClose, MdOutlineSearch } from "react-icons/md";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useCart } from "../../contexts/CartContext";
 
 type MenuColumns = string[][];
 type Item = { name: string; path: string; menu?: MenuColumns };
@@ -62,6 +63,9 @@ export function SearchBar() {
 // Top navigation bar with search, logo, and user actions
 // Contains search functionality, branding, and account/cart links
 export function TopBar() {
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
+
   return (
     <div className="bg-[#6E8EBE] h-24 text-white flex items-center justify-between px-6">
       
@@ -87,9 +91,16 @@ export function TopBar() {
           <span>Account</span>
           <MdAccountCircle size={30} />
         </Link>
-        <Link href="/not-implemented" className="flex items-center space-x-2 cursor-pointer">
+        <Link href="/cart" className="flex items-center space-x-2 cursor-pointer relative">
           <span>Cart</span>
-          <MdOutlineShoppingCart size={30} />
+          <div className="relative">
+            <MdOutlineShoppingCart size={30} />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {cartCount > 9 ? '9+' : cartCount}
+              </span>
+            )}
+          </div>
         </Link>
       </div>
     </div>
@@ -118,8 +129,7 @@ export function BottomBar() {
     },
     {
       name: "Notebooks & Pads",
-      // Change to /notebooks when implemented
-      path: "/not-implemented",
+      path: "/notebooks-and-pads",
       menu: [
         ["A4 Pads", "A5 Pads", "Dot Grid"],
         ["Hardcover Notebooks", "Softcover Notebooks"],
@@ -128,8 +138,7 @@ export function BottomBar() {
     },
     {
       name: "Writing Supplies",
-      // Change to /writing-supplies when implemented
-      path: "/not-implemented",
+      path: "/writing-supplies",
       menu: [
         ["Ballpoint", "Gel", "Fountain"],
         ["Highlighters", "Fineliners"],
@@ -138,8 +147,7 @@ export function BottomBar() {
     },
     {
       name: "Other",
-      // Change to /other when implemented
-      path: "/not-implemented",
+      path: "/other",
       menu: [
         ["Calculators", "Rulers"],
         ["Folders & Files", "Binders"],
@@ -183,7 +191,13 @@ export function BottomBar() {
       <div className="bg-[#FFDBC2] h-14 flex justify-center items-center gap-10">
         {items.map((item) => {
           const isActive = item.name === "Course Books" 
-            ? pathname.startsWith("/course-books") || pathname === "/not-implemented"
+            ? pathname.startsWith("/course-books")
+            : item.name === "Notebooks & Pads"
+            ? pathname === "/notebooks-and-pads"
+            : item.name === "Writing Supplies"
+            ? pathname === "/writing-supplies"
+            : item.name === "Other"
+            ? pathname === "/other"
             : isActivePath(item.path);
           const hasMenu = !!item.menu;
 
@@ -230,6 +244,12 @@ export function BottomBar() {
                         href={
                           current.name === "Course Books" 
                             ? `/course-books/${getDegreeSlug(label)}`
+                            : current.name === "Notebooks & Pads"
+                            ? `/notebooks-and-pads?category=${encodeURIComponent(label)}`
+                            : current.name === "Writing Supplies"
+                            ? `/writing-supplies?category=${encodeURIComponent(label)}`
+                            : current.name === "Other"
+                            ? `/other?category=${encodeURIComponent(label)}`
                             : "/not-implemented"
                         }
                         className="hover:underline"

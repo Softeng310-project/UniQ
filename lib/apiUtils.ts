@@ -1,4 +1,7 @@
 import Book from "@/models/Book";
+import Notebook from "@/models/Notebook";
+import WritingSupply from "@/models/WritingSupply";
+import Other from "@/models/Other";
 import mongoose from "mongoose";
 import clientPromise from "@/lib/mongodb";
 
@@ -198,6 +201,99 @@ export async function fetchBooksData(
   const categories = await Book.distinct('category');
   const majors = await Book.distinct('major');
   const years = await Book.distinct('year');
+
+  return { books, total, categories, majors, years };
+}
+
+// Fetches notebooks data with filtering, sorting, and pagination
+export async function fetchNotebooksData(
+  filter: any,
+  sort: SortOptions,
+  page: number,
+  limit: number
+): Promise<{
+  books: any[];
+  total: number;
+  categories: string[];
+  majors: string[];
+  years: number[];
+}> {
+  // Get total count for pagination
+  const total = await Notebook.countDocuments(filter);
+  
+  // Get notebooks with pagination
+  const books = await Notebook.find(filter)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  // Get unique categories for filters (using type as category for notebooks)
+  const categories = await Notebook.distinct('type');
+  const majors: string[] = []; // Not applicable for notebooks
+  const years: number[] = []; // Not applicable for notebooks
+
+  return { books, total, categories, majors, years };
+}
+
+// Fetches writing supplies data with filtering, sorting, and pagination
+export async function fetchWritingSuppliesData(
+  filter: any,
+  sort: SortOptions,
+  page: number,
+  limit: number
+): Promise<{
+  books: any[];
+  total: number;
+  categories: string[];
+  majors: string[];
+  years: number[];
+}> {
+  // Get total count for pagination
+  const total = await WritingSupply.countDocuments(filter);
+  
+  // Get writing supplies with pagination
+  const books = await WritingSupply.find(filter)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  // Get unique categories for filters (using type as category for writing supplies)
+  const categories = await WritingSupply.distinct('type');
+  const majors: string[] = []; // Not applicable for writing supplies
+  const years: number[] = []; // Not applicable for writing supplies
+
+  return { books, total, categories, majors, years };
+}
+
+// Fetches other items data with filtering, sorting, and pagination
+export async function fetchOtherData(
+  filter: any,
+  sort: SortOptions,
+  page: number,
+  limit: number
+): Promise<{
+  books: any[];
+  total: number;
+  categories: string[];
+  majors: string[];
+  years: number[];
+}> {
+  // Get total count for pagination
+  const total = await Other.countDocuments(filter);
+  
+  // Get other items with pagination
+  const books = await Other.find(filter)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  // Get unique categories for filters (using type as category for other items)
+  const categories = await Other.distinct('type');
+  const majors: string[] = []; // Not applicable for other items
+  const years: number[] = []; // Not applicable for other items
 
   return { books, total, categories, majors, years };
 }

@@ -5,6 +5,9 @@ import {
   buildSort,
   getPaginationParams,
   fetchBooksData,
+  fetchNotebooksData,
+  fetchWritingSuppliesData,
+  fetchOtherData,
   createPaginationInfo,
   createFilterData,
   createErrorResponse,
@@ -17,20 +20,34 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const productType = searchParams.get('type') || 'course-books';
   const params = extractQueryParams(searchParams);
-  const filter = buildFilter(params);
+  
+  // Build filter based on product type
+  let filter = buildFilter(params);
+  
+  // For non-course-books, map category to the correct field name
+  if (productType !== 'course-books' && params.category) {
+    if (productType === 'notebooks-and-pads') {
+      filter.type = filter.category;
+      delete filter.category;
+    } else if (productType === 'writing-supplies' || productType === 'other') {
+      filter.type = filter.category;
+      delete filter.category;
+    }
+  }
+  
   const sort = buildSort(params.sortBy || 'title');
   const { page, limit } = getPaginationParams(params);
 
   try {
-    let products;
-    let total;
-    let categories;
-    let majors;
-    let years;
+    let products: any[] = [];
+    let total: number = 0;
+    let categories: string[] = [];
+    let majors: string[] = [];
+    let years: number[] = [];
 
     // Handle different product types
     switch (productType) {
-      case 'course-books':
+      case 'course-books': {
         const booksData = await fetchBooksData(filter, sort, page, limit);
         products = booksData.books;
         total = booksData.total;
@@ -38,14 +55,37 @@ export async function GET(request: Request) {
         majors = booksData.majors;
         years = booksData.years;
         break;
+      }
 
-      // Add more product types here in the future
-      // case 'notebooks':
-      //   // Handle notebooks
-      //   break;
-      // case 'writing-supplies':
-      //   // Handle writing supplies
-      //   break;
+      case 'notebooks-and-pads': {
+        const notebooksData = await fetchNotebooksData(filter, sort, page, limit);
+        products = notebooksData.books;
+        total = notebooksData.total;
+        categories = notebooksData.categories;
+        majors = notebooksData.majors;
+        years = notebooksData.years;
+        break;
+      }
+
+      case 'writing-supplies': {
+        const writingSuppliesData = await fetchWritingSuppliesData(filter, sort, page, limit);
+        products = writingSuppliesData.books;
+        total = writingSuppliesData.total;
+        categories = writingSuppliesData.categories;
+        majors = writingSuppliesData.majors;
+        years = writingSuppliesData.years;
+        break;
+      }
+
+      case 'other': {
+        const otherData = await fetchOtherData(filter, sort, page, limit);
+        products = otherData.books;
+        total = otherData.total;
+        categories = otherData.categories;
+        majors = otherData.majors;
+        years = otherData.years;
+        break;
+      }
 
       default:
         return createErrorResponse("Invalid product type", 400);

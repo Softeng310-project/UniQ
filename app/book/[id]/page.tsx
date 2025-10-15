@@ -1,11 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Breadcrumb from "../../../components/product-results/Breadcrumb";
+import { generateBookDetailsBreadcrumbs } from "../../../lib/breadcrumbUtils";
+import { useCart } from "../../../contexts/CartContext";
 
 // Book details page displaying individual book information
 // Shows book cover, price, description, and quantity controls for purchase
 export default function BookDetails({ params }: { params: { id: string } }) {
   const [book, setBook] = useState<any>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const [addedToCart, setAddedToCart] = useState<boolean>(false);
+  const { addToCart } = useCart();
+  const router = useRouter();
 
   // Fetch book data from API based on ID
   useEffect(() => {
@@ -26,13 +33,35 @@ export default function BookDetails({ params }: { params: { id: string } }) {
 
   const handleDecrease = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
   const handleIncrease = () => setQuantity((q) => q + 1);
+  
+  // Handle adding book to cart
+  const handleAddToCart = () => {
+    if (book && !book.error) {
+      addToCart({
+        id: params.id,
+        title: book.title,
+        price: book.price,
+        category: book.category,
+        degree: book.degree,
+        condition: book.condition,
+        description: book.description,
+      }, quantity);
+      
+      // Show feedback to user
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000);
+    }
+  };
+
+  // Generate breadcrumb items based on book data
+  const getBreadcrumbItems = () => generateBookDetailsBreadcrumbs(book);
 
   return (
-    <div className="px-8 py-6 max-w-5xl mx-auto">
+    <div className="min-h-screen bg-white">
       {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 mb-6">
-        Home {'>'} Course Books {'>'} Engineering {'>'} {book.major} {'>'} {book.year} {'>'} {book.title}
-      </nav>
+      <Breadcrumb items={getBreadcrumbItems()} title={book?.title || "Book Details"} />
+      
+      <div className="px-8 py-6 max-w-5xl mx-auto">
       <div className="flex flex-col md:flex-row gap-10">
         {/* Book Cover */}
         <div className="flex-shrink-0">
@@ -71,8 +100,15 @@ export default function BookDetails({ params }: { params: { id: string } }) {
                 </button>
               </div>
             </div>
-            <button className="ml-4 w-[550px] h-[38px] px-8 bg-orange-100 border border-gray-300 text-lg text-gray-700 rounded hover:bg-orange-200 transition text-center flex items-center justify-center">
-              ADD TO CART
+            <button 
+              onClick={handleAddToCart}
+              className={`ml-4 w-[550px] h-[38px] px-8 border border-gray-300 text-lg rounded transition text-center flex items-center justify-center ${
+                addedToCart 
+                  ? 'bg-green-500 text-white' 
+                  : 'bg-orange-100 text-gray-700 hover:bg-orange-200'
+              }`}
+            >
+              {addedToCart ? '✓ ADDED TO CART' : 'ADD TO CART'}
             </button>
           </div>
           <hr className="my-6" />
@@ -82,6 +118,7 @@ export default function BookDetails({ params }: { params: { id: string } }) {
             <div className="text-gray-600 text-base leading-relaxed">{book.description}</div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
