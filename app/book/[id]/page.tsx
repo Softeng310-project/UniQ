@@ -1,13 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Breadcrumb from "../../../components/product-results/Breadcrumb";
 import { generateBookDetailsBreadcrumbs } from "../../../lib/breadcrumbUtils";
+import { useCart } from "../../../contexts/CartContext";
 
 // Book details page displaying individual book information
 // Shows book cover, price, description, and quantity controls for purchase
 export default function BookDetails({ params }: { params: { id: string } }) {
   const [book, setBook] = useState<any>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const [addedToCart, setAddedToCart] = useState<boolean>(false);
+  const { addToCart } = useCart();
+  const router = useRouter();
 
   // Fetch book data from API based on ID
   useEffect(() => {
@@ -28,6 +33,25 @@ export default function BookDetails({ params }: { params: { id: string } }) {
 
   const handleDecrease = () => setQuantity((q) => (q > 1 ? q - 1 : 1));
   const handleIncrease = () => setQuantity((q) => q + 1);
+  
+  // Handle adding book to cart
+  const handleAddToCart = () => {
+    if (book && !book.error) {
+      addToCart({
+        id: params.id,
+        title: book.title,
+        price: book.price,
+        category: book.category,
+        degree: book.degree,
+        condition: book.condition,
+        description: book.description,
+      }, quantity);
+      
+      // Show feedback to user
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000);
+    }
+  };
 
   // Generate breadcrumb items based on book data
   const getBreadcrumbItems = () => generateBookDetailsBreadcrumbs(book);
@@ -76,8 +100,15 @@ export default function BookDetails({ params }: { params: { id: string } }) {
                 </button>
               </div>
             </div>
-            <button className="ml-4 w-[550px] h-[38px] px-8 bg-orange-100 border border-gray-300 text-lg text-gray-700 rounded hover:bg-orange-200 transition text-center flex items-center justify-center">
-              ADD TO CART
+            <button 
+              onClick={handleAddToCart}
+              className={`ml-4 w-[550px] h-[38px] px-8 border border-gray-300 text-lg rounded transition text-center flex items-center justify-center ${
+                addedToCart 
+                  ? 'bg-green-500 text-white' 
+                  : 'bg-orange-100 text-gray-700 hover:bg-orange-200'
+              }`}
+            >
+              {addedToCart ? '✓ ADDED TO CART' : 'ADD TO CART'}
             </button>
           </div>
           <hr className="my-6" />
