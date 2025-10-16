@@ -22,6 +22,26 @@ interface ProductCardProps {
 // Handles product image display with fallback for missing images
 // Shows product details: title, author (if available), price, and condition
 export default function ProductCard({ product, onProductClick }: ProductCardProps) {
+
+  const getPlaceholderImage = () => {
+    // Check if image path contains hints about product type
+    if (product.image?.includes('/book')) {
+      return '/assets/NoteBooks.webp';
+    } else if (product.image?.includes('/notebook')) {
+      return '/assets/NoteBooks.webp';
+    } else if (product.image?.includes('/writing')) {
+      return '/assets/WritingSuppliesProduct.jpg';
+    } else if (product.image?.includes('/other')) {
+      return '/assets/Calculators.webp';
+    }
+    return '/assets/image-not-found.png'; // Default fallback
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = getPlaceholderImage();
+    e.currentTarget.onerror = null; // Prevent infinite loop if placeholder also fails
+  };
+
   return (
     <button
       className="bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -30,10 +50,11 @@ export default function ProductCard({ product, onProductClick }: ProductCardProp
     >
       <div className="h-48 bg-gray-200 rounded flex items-center justify-center">
         {product.image ? (
-          <img 
-            src={product.image} 
+          <img
+            src={product.image}
             alt={`Image of ${product.title}`}
             className="w-full h-full object-cover rounded"
+            onError={handleImageError}
           />
         ) : (
           <span className="text-gray-500 text-sm">Product Image</span>
