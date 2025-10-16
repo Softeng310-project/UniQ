@@ -10,7 +10,7 @@ export interface BreadcrumbItem {
 // Convert degree name to URL format
 export const getDegreeUrl = (degree: string): string => {
   if (!degree) return "engineering";
-  return degree.toLowerCase().replace(/\s+/g, '-').replace(/&/g, 'and');
+  return degree.toLowerCase().replaceAll(/\s+/g, '-').replaceAll('&', 'and');
 };
 
 // Convert URL degree format to display format
@@ -70,10 +70,13 @@ export const generateProductResultsBreadcrumbs = (
       }
       break;
     case "notebooks-and-pads":
-      breadcrumbs.push({ label: "Notebooks & Pads" }); // Not clickable
+      breadcrumbs.push({ label: "Notebooks & Pads", href: "/notebooks-and-pads" }); // Clickable
       break;
     case "writing-supplies":
-      breadcrumbs.push({ label: "Writing Supplies" }); // Not clickable
+      breadcrumbs.push({ label: "Writing Supplies", href: "/writing-supplies" }); // Clickable
+      break;
+    case "other":
+      breadcrumbs.push({ label: "Other", href: "/other" }); // Clickable
       break;
     default:
       breadcrumbs.push({ label: "Products" }); // Not clickable
@@ -94,7 +97,7 @@ export const generateNewArrivalsBreadcrumbs = (): BreadcrumbItem[] => {
 export const generateNotebooksBreadcrumbs = (): BreadcrumbItem[] => {
   return [
     { label: "Home", href: "/" },
-    { label: "Notebooks & Pads" } // Not clickable
+    { label: "Notebooks & Pads", href: "/notebooks-and-pads" } // Clickable
   ];
 };
 
@@ -102,7 +105,7 @@ export const generateNotebooksBreadcrumbs = (): BreadcrumbItem[] => {
 export const generateWritingSuppliesBreadcrumbs = (): BreadcrumbItem[] => {
   return [
     { label: "Home", href: "/" },
-    { label: "Writing Supplies" } // Not clickable
+    { label: "Writing Supplies", href: "/writing-supplies" } // Clickable
   ];
 };
 
@@ -110,6 +113,6 @@ export const generateWritingSuppliesBreadcrumbs = (): BreadcrumbItem[] => {
 export const generateOtherBreadcrumbs = (): BreadcrumbItem[] => {
   return [
     { label: "Home", href: "/" },
-    { label: "Other" } // Not clickable
+    { label: "Other", href: "/other" } // Clickable
   ];
 };
