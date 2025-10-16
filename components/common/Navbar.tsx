@@ -128,6 +128,14 @@ const getMenuItemUrl = (itemName: string, label: string): string => {
   }
 };
 
+// Helper function to handle navigation with query parameters
+const handleSubsectionNavigation = (itemName: string, label: string, pathname: string) => {
+  const targetUrl = getMenuItemUrl(itemName, label);
+  
+  // Use globalThis.location to force navigation
+  globalThis.location.href = targetUrl;
+};
+
 const getTabClassName = (isActive: boolean): string => {
   const baseClasses = `
     relative h-full flex items-center px-4
@@ -216,7 +224,7 @@ function Logo() {
 /**
  * Cart count badge component
  */
-function CartCountBadge({ count }: { count: number }) {
+function CartCountBadge({ count }: { readonly count: number }) {
   if (count <= 0) return null;
 
   return (
@@ -229,7 +237,7 @@ function CartCountBadge({ count }: { count: number }) {
 /**
  * Individual cart item component
  */
-function CartItem({ item, cartCount }: { item: CartItem; cartCount: number }) {
+function CartItem({ item, cartCount }: { readonly item: CartItem; readonly cartCount: number }) {
   const Icon = item.icon;
   
   return (
@@ -273,9 +281,9 @@ function NavigationTab({
   isActive, 
   onMouseEnter 
 }: { 
-  item: NavigationItem; 
-  isActive: boolean; 
-  onMouseEnter: (itemName: string, hasMenu: boolean) => void;
+  readonly item: NavigationItem; 
+  readonly isActive: boolean; 
+  readonly onMouseEnter: (itemName: string, hasMenu: boolean) => void;
 }) {
   const hasMenu = !!item.menu;
 
@@ -297,10 +305,12 @@ function NavigationTab({
  */
 function DropdownMenu({ 
   item, 
-  onMouseEnter 
+  onMouseEnter,
+  pathname
 }: { 
-  item: NavigationItem; 
-  onMouseEnter: (itemName: string, hasMenu: boolean) => void;
+  readonly item: NavigationItem; 
+  readonly onMouseEnter: (itemName: string, hasMenu: boolean) => void;
+  readonly pathname: string;
 }) {
   if (!item.menu) return null;
 
@@ -312,19 +322,25 @@ function DropdownMenu({
         animate-[fadeIn_120ms_ease-out]
       "
       onMouseEnter={() => onMouseEnter(item.name, true)}
+      role="menu"
+      aria-label={`${item.name} submenu`}
+      tabIndex={-1}
     >
       <div className="px-24 py-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {item.menu.map((column, columnIndex) => (
-            <ul key={columnIndex} className="space-y-3">
+            <ul key={`${item.name}-column-${columnIndex}`} className="space-y-3">
               {column.map((label) => (
                 <li key={label}>
-                  <Link
-                    href={getMenuItemUrl(item.name, label)}
-                    className="hover:underline transition-colors hover:text-[#2A4A6B]"
+                  <button
+                    onClick={() => handleSubsectionNavigation(item.name, label, pathname)}
+                    className="hover:underline transition-colors hover:text-[#2A4A6B] text-left"
+                    type="button"
+                    role="menuitem"
+                    tabIndex={0}
                   >
                     {label}
-                  </Link>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -361,7 +377,7 @@ export function BottomBar() {
   };
 
   return (
-    <div className="relative" onMouseLeave={handleMouseLeave}>
+    <nav className="relative" onMouseLeave={handleMouseLeave} aria-label="Main navigation">
       <div className="bg-[#FFDBC2] h-14 flex justify-center items-center gap-10">
         {NAVIGATION_ITEMS.map((item) => (
           <NavigationTab
@@ -377,9 +393,10 @@ export function BottomBar() {
         <DropdownMenu
           item={currentHoveredItem}
           onMouseEnter={handleMouseEnter}
+          pathname={pathname}
         />
       )}
-    </div>
+    </nav>
   );
 }
 
