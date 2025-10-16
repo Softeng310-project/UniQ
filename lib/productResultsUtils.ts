@@ -1,5 +1,6 @@
 import { Product } from "@/components/product-results/ProductCard";
 
+// Sort options with better type safety
 export const sortOptions = [
   "Alphabetically, A-Z",
   "Alphabetically, Z-A",
@@ -7,9 +8,13 @@ export const sortOptions = [
   "Price, high to low",
   "Date added, newest to oldest",
   "Date added, oldest to newest",
-];
+] as const;
 
-export const conditions = ["New", "Used"];
+export const conditions = ["New", "Used"] as const;
+
+// Type definitions for better type safety
+export type SortOption = typeof sortOptions[number];
+export type Condition = typeof conditions[number];
 
 // Configuration for different product types (course books, notebooks & pads, writing supplies)
 // Defines breadcrumbs, category labels, routes, and image prefixes for each type
@@ -53,18 +58,27 @@ export function filterAndSortProducts(
   selectedCategories: string[],
   selectedConditions: string[],
   selectedYears: string[],
-  sortBy: string,
+  sortBy: SortOption,
 ): Product[] {
+  // Early return for empty products
+  if (!products || products.length === 0) {
+    return [];
+  }
+
   let filtered = products;
 
   // Filter by selected categories
   if (selectedCategories.length > 0) {
-    filtered = filtered.filter(product => selectedCategories.includes(product.category));
+    filtered = filtered.filter(product => 
+      product.category && selectedCategories.includes(product.category)
+    );
   }
 
   // Filter by selected conditions
   if (selectedConditions.length > 0) {
-    filtered = filtered.filter(product => selectedConditions.includes(product.condition));
+    filtered = filtered.filter(product => 
+      product.condition && selectedConditions.includes(product.condition)
+    );
   }
 
   // Filter by selected years
@@ -80,22 +94,29 @@ export function filterAndSortProducts(
     });
   }
 
-  // Sort products
+  // Sort products using separate function for better maintainability
+  return sortProducts(filtered, sortBy);
+}
+
+// Separate sorting function for better testability and reusability
+export function sortProducts(products: Product[], sortBy: SortOption): Product[] {
+  const sortedProducts = [...products]; // Create a copy to avoid mutating original array
+  
   switch (sortBy) {
     case "Alphabetically, A-Z":
-      return filtered.sort((a, b) => a.title.localeCompare(b.title));
+      return sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
     case "Alphabetically, Z-A":
-      return filtered.sort((a, b) => b.title.localeCompare(a.title));
+      return sortedProducts.sort((a, b) => b.title.localeCompare(a.title));
     case "Price, low to high":
-      return filtered.sort((a, b) => a.price - b.price);
+      return sortedProducts.sort((a, b) => a.price - b.price);
     case "Price, high to low":
-      return filtered.sort((a, b) => b.price - a.price);
+      return sortedProducts.sort((a, b) => b.price - a.price);
     case "Date added, newest to oldest":
-      return filtered.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+      return sortedProducts.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
     case "Date added, oldest to newest":
-      return filtered.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+      return sortedProducts.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
     default:
-      return filtered;
+      return sortedProducts;
   }
 }
 
@@ -108,9 +129,27 @@ function extractYearNumber(yearString: string): number {
 
 // Splits product array into pages for pagination
 export function paginateProducts(products: Product[], currentPage: number, itemsPerPage: number): Product[] {
+  // Validate inputs
+  if (!products || products.length === 0) {
+    return [];
+  }
+  
+  if (currentPage < 1 || itemsPerPage < 1) {
+    console.warn('Invalid pagination parameters: page and itemsPerPage must be positive');
+    return products;
+  }
+  
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   return products.slice(startIndex, endIndex);
+}
+
+// Helper function to calculate total pages
+export function calculateTotalPages(totalItems: number, itemsPerPage: number): number {
+  if (totalItems <= 0 || itemsPerPage <= 0) {
+    return 0;
+  }
+  return Math.ceil(totalItems / itemsPerPage);
 }
 
 // Helper function to get product configuration
@@ -118,18 +157,35 @@ export function getProductTypeConfig(productType: ProductType) {
   return PRODUCT_TYPES[productType];
 }
 
+// Database product interface for better type safety
+export interface DatabaseProduct {
+  id: string | number;
+  title: string;
+  author?: string;
+  price: number;
+  condition: string;
+  category: string;
+  image?: string;
+  year?: number;
+}
+
 // Transforms database product data to match Product interface
 // Handles optional fields and provides fallback image paths
-export function transformDatabaseProduct(product: any, productType: ProductType): Product {
+export function transformDatabaseProduct(product: DatabaseProduct, productType: ProductType): Product {
   const config = getProductTypeConfig(productType);
+  
+  // Validate required fields
+  if (!product.id || !product.title || typeof product.price !== 'number') {
+    throw new Error('Invalid product data: missing required fields (id, title, or price)');
+  }
   
   return {
     id: product.id,
     title: product.title,
     author: product.author || '',
     price: product.price,
-    condition: product.condition,
-    category: product.category,
+    condition: product.condition || 'New',
+    category: product.category || 'Uncategorized',
     image: product.image || `${config.imagePrefix}${product.id}.jpg`,
     year: product.year
   };
