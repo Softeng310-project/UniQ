@@ -34,6 +34,13 @@ export const PRODUCT_TYPES = {
     categoryLabel: 'Categories',
     detailRoute: '/writing-supply',
     imagePrefix: '/assets/writing'
+  },
+  'other': {
+    name: 'Other',
+    breadcrumb: ['Home', 'Other'],
+    categoryLabel: 'Categories',
+    detailRoute: '/other',
+    imagePrefix: '/assets/other'
   }
 } as const;
 
@@ -46,7 +53,7 @@ export function filterAndSortProducts(
   selectedCategories: string[],
   selectedConditions: string[],
   selectedYears: string[],
-  sortBy: string
+  sortBy: string,
 ): Product[] {
   let filtered = products;
 
@@ -94,7 +101,8 @@ export function filterAndSortProducts(
 
 // Helper function to extract year number from year string (e.g., "1st Year" -> 1)
 function extractYearNumber(yearString: string): number {
-  const match = yearString.match(/(\d+)/);
+  const regex = /(\d+)/;
+  const match = regex.exec(yearString);
   return match ? parseInt(match[1]) : 0;
 }
 
@@ -142,22 +150,45 @@ export const engineeringMajors = [
   "Structural Engineering",
 ];
 
+// Updated categories based on the schema requirements
 export const notebookTypes = [
-  "Spiral Bound",
-  "Ring Binder",
-  "Composition",
-  "Lab Notebook",
-  "Graph Paper",
-  "Lined Paper",
-  "Blank Paper",
+  "A4 Pads",
+  "A5 Pads", 
+  "Dot Grid",
+  "Hardcover Notebooks",
+  "Softcover Notebooks",
+  "Sticky Notes",
+  "Index Tabs"
 ];
 
 export const writingSuppliesTypes = [
-  "Pens",
-  "Pencils",
-  "Markers",
+  "Ballpoint",
+  "Gel",
+  "Fountain",
   "Highlighters",
+  "Fineliners",
+  "Pencils",
   "Erasers",
-  "Rulers",
+  "Sharpeners"
+];
+
+export const otherTypes = [
   "Calculators",
+  "Rulers",
+  "Folders & Files",
+  "Binders",
+  "Staplers",
+  "Scissors",
+  "Glue"
+];
+
+// Additional degree options for coursebooks
+export const additionalDegrees = [
+  "Arts",
+  "Business and Economics", 
+  "Creative Arts and Industries",
+  "Education and Social Work",
+  "Law",
+  "Medicine & Health Science",
+  "Science"
 ];

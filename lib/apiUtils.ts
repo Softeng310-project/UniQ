@@ -1,4 +1,7 @@
 import Book from "@/models/Book";
+import Notebook from "@/models/Notebook";
+import WritingSupply from "@/models/WritingSupply";
+import Other from "@/models/Other";
 import mongoose from "mongoose";
 import clientPromise from "@/lib/mongodb";
 
@@ -12,6 +15,8 @@ export interface QueryParams {
   page?: string | null;
   limit?: string | null;
   sortBy?: string | null;
+  minPrice?: string | null;
+  maxPrice?: string | null;
 }
 
 export interface FilterOptions {
@@ -20,6 +25,10 @@ export interface FilterOptions {
   major?: string;
   degree?: string;
   year?: number;
+  price?: {
+    $gte?: number;
+    $lte?: number;
+  };
 }
 
 export interface SortOptions {
@@ -62,7 +71,9 @@ export function extractQueryParams(searchParams: URLSearchParams): QueryParams {
     year: searchParams.get('year'),
     page: searchParams.get('page'),
     limit: searchParams.get('limit'),
-    sortBy: searchParams.get('sortBy')
+    sortBy: searchParams.get('sortBy'),
+    minPrice: searchParams.get('minPrice'),
+    maxPrice: searchParams.get('maxPrice')
   };
 }
 
@@ -101,6 +112,30 @@ export function buildFilter(params: QueryParams): any {
       filter.year = { $in: years };
     } else {
       filter.year = years[0];
+    }
+  }
+
+  // Handle price range filtering
+  if (params.minPrice !== null || params.maxPrice !== null) {
+    filter.price = {};
+    
+    if (params.minPrice !== null && params.minPrice !== undefined) {
+      const min = parseFloat(params.minPrice);
+      if (!isNaN(min)) {
+        filter.price.$gte = min;
+      }
+    }
+    
+    if (params.maxPrice !== null && params.maxPrice !== undefined) {
+      const max = parseFloat(params.maxPrice);
+      if (!isNaN(max)) {
+        filter.price.$lte = max;
+      }
+    }
+    
+    // If no valid price constraints were added, remove the price query
+    if (Object.keys(filter.price).length === 0) {
+      delete filter.price;
     }
   }
 
@@ -170,6 +205,99 @@ export async function fetchBooksData(
   return { books, total, categories, majors, years };
 }
 
+// Fetches notebooks data with filtering, sorting, and pagination
+export async function fetchNotebooksData(
+  filter: any,
+  sort: SortOptions,
+  page: number,
+  limit: number
+): Promise<{
+  books: any[];
+  total: number;
+  categories: string[];
+  majors: string[];
+  years: number[];
+}> {
+  // Get total count for pagination
+  const total = await Notebook.countDocuments(filter);
+  
+  // Get notebooks with pagination
+  const books = await Notebook.find(filter)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  // Get unique categories for filters (using type as category for notebooks)
+  const categories = await Notebook.distinct('type');
+  const majors: string[] = []; // Not applicable for notebooks
+  const years: number[] = []; // Not applicable for notebooks
+
+  return { books, total, categories, majors, years };
+}
+
+// Fetches writing supplies data with filtering, sorting, and pagination
+export async function fetchWritingSuppliesData(
+  filter: any,
+  sort: SortOptions,
+  page: number,
+  limit: number
+): Promise<{
+  books: any[];
+  total: number;
+  categories: string[];
+  majors: string[];
+  years: number[];
+}> {
+  // Get total count for pagination
+  const total = await WritingSupply.countDocuments(filter);
+  
+  // Get writing supplies with pagination
+  const books = await WritingSupply.find(filter)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  // Get unique categories for filters (using type as category for writing supplies)
+  const categories = await WritingSupply.distinct('type');
+  const majors: string[] = []; // Not applicable for writing supplies
+  const years: number[] = []; // Not applicable for writing supplies
+
+  return { books, total, categories, majors, years };
+}
+
+// Fetches other items data with filtering, sorting, and pagination
+export async function fetchOtherData(
+  filter: any,
+  sort: SortOptions,
+  page: number,
+  limit: number
+): Promise<{
+  books: any[];
+  total: number;
+  categories: string[];
+  majors: string[];
+  years: number[];
+}> {
+  // Get total count for pagination
+  const total = await Other.countDocuments(filter);
+  
+  // Get other items with pagination
+  const books = await Other.find(filter)
+    .sort(sort)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+
+  // Get unique categories for filters (using type as category for other items)
+  const categories = await Other.distinct('type');
+  const majors: string[] = []; // Not applicable for other items
+  const years: number[] = []; // Not applicable for other items
+
+  return { books, total, categories, majors, years };
+}
+
 // Creates pagination information object
 export function createPaginationInfo(total: number, page: number, limit: number): PaginationInfo {
   return {
@@ -197,3 +325,27 @@ export function createSuccessResponse(data: any, additionalFields?: Record<strin
     ...additionalFields
   });
 }
+
+// Gets the minimum and maximum price from all books in the database
+// Useful for setting default price range slider values
+export async function getPriceRange() {
+  const result = await Book.aggregate([
+    {
+      $group: {
+        _id: null,
+        minPrice: { $min: "$price" },
+        maxPrice: { $max: "$price" }
+      }
+    }
+  ]);
+
+  if (result.length > 0) {
+    return {
+      minPrice: Math.floor(result[0].minPrice || 0),
+      maxPrice: Math.ceil(result[0].maxPrice || 1000)
+    };
+  }
+
+  return { minPrice: 0, maxPrice: 1000 };
+}
+
