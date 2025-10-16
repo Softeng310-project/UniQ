@@ -46,6 +46,8 @@ export default function ProductResults({
   const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const [availableMajors, setAvailableMajors] = useState<string[]>([]);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
+  const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
+  const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -82,6 +84,12 @@ export default function ProductResults({
     initialYears 
   });
 
+  const handlePriceChange = (min: number | undefined, max: number | undefined) => {
+    setMinPrice(min);
+    setMaxPrice(max);
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
   // Fetch products from API with current filters and sorting
   const fetchProducts = async (isFilterChange = false) => {
     if (isFilterChange) {
@@ -110,6 +118,14 @@ export default function ProductResults({
         
         const dbDegree = degreeMapping[degree] || degree;
         params.append('degree', dbDegree);
+      }
+
+      // Add price range filters
+      if (minPrice !== undefined) {
+        params.append('minPrice', minPrice.toString());
+      }
+      if (maxPrice !== undefined) {
+        params.append('maxPrice', maxPrice.toString());
       }
       
       // Add sort parameter
@@ -186,7 +202,7 @@ export default function ProductResults({
     }, 300); // 300ms debounce
 
     return () => clearTimeout(timeoutId);
-  }, [selectedCategories, selectedConditions, selectedYears]);
+  }, [selectedCategories, selectedConditions, selectedYears, minPrice, maxPrice]);
 
   const handleProductClick = (product: Product) => {
     // Navigate to product detail page
@@ -233,9 +249,12 @@ export default function ProductResults({
           selectedCategories={selectedCategories}
           selectedConditions={selectedConditions}
           selectedYears={selectedYears}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
           onCategoryToggle={toggleCategory}
           onConditionToggle={toggleCondition}
           onYearToggle={toggleYear}
+          onPriceChange={handlePriceChange}
           categoryLabel={getProductTypeConfig(productType).categoryLabel}
           showYearFilter={productType === "course-books"}
           showConditionFilter={productType === "course-books"}

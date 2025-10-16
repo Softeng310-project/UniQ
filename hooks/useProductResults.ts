@@ -63,10 +63,15 @@ export function useProductResults({
     setForceUpdate(prev => prev + 1);
   };
 
-  // Filter and sort products based on current selections
   const filteredAndSortedProducts = useMemo(() => {
-    return filterAndSortProducts(products, selectedCategories, selectedConditions, selectedYears, sortBy);
-  }, [products, selectedCategories, selectedConditions, selectedYears, sortBy, forceUpdate]);
+  return filterAndSortProducts(
+    products,
+    selectedCategories,
+    selectedConditions,
+    selectedYears,
+    sortBy,
+  );
+}, [products, selectedCategories, selectedConditions, selectedYears, sortBy, forceUpdate]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
