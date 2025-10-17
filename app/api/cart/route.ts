@@ -1,64 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { ensureDatabaseConnection } from "@/lib/apiUtils";
-import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
-import User, { IUser, IUserCartItem } from "@/models/User";
-
-class UnauthorizedError extends Error {}
-
-function serializeCart(items: IUserCartItem[]) {
-  return items.map((item) => ({
-    id: item.id,
-    title: item.title,
-    price: item.price,
-    quantity: item.quantity,
-    category: item.category,
-    degree: item.degree,
-    condition: item.condition,
-    description: item.description,
-  }));
-}
-
-async function getAuthenticatedUser(): Promise<IUser> {
-  const token = cookies().get(getAuthCookieName())?.value;
-  if (!token) {
-    throw new UnauthorizedError("Not authenticated");
-  }
-
-  let userId: string;
-
-  try {
-    const payload = await verifyAuthToken(token);
-    userId = payload.sub;
-  } catch {
-    throw new UnauthorizedError("Not authenticated");
-  }
-
-  await ensureDatabaseConnection();
-  const user = await User.findById(userId);
-
-  if (!user) {
-    throw new UnauthorizedError("Not authenticated");
-  }
-
-  if (!user.cartItems) {
-    user.cartItems = [];
-  }
-
-  return user;
-}
-
-function handleUnauthorized(error: unknown) {
-  if (error instanceof UnauthorizedError) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
-  return null;
-}
+import { serializeCartItems } from "@/lib/api/cart";
+import { getAuthenticatedUser, handleUnauthorized } from "@/lib/api/authenticatedUser";
+import { IUserCartItem } from "@/models/User";
 
 export async function GET() {
   try {
-    const user = await getAuthenticatedUser();
-    return NextResponse.json({ items: serializeCart(user.cartItems || []) });
+    const user = await getAuthenticatedUser({ ensureCartItems: true });
+    return NextResponse.json({ items: serializeCartItems(user.cartItems) });
   } catch (error) {
     const unauthorizedResponse = handleUnauthorized(error);
     if (unauthorizedResponse) {
@@ -71,7 +19,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthenticatedUser();
+    const user = await getAuthenticatedUser({ ensureCartItems: true });
     const body = await request.json();
     const { item, quantity } = body as {
       item?: Partial<IUserCartItem>;
@@ -104,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
 
     await user.save();
-    return NextResponse.json({ items: serializeCart(user.cartItems) });
+    return NextResponse.json({ items: serializeCartItems(user.cartItems) });
   } catch (error) {
     const unauthorizedResponse = handleUnauthorized(error);
     if (unauthorizedResponse) {
@@ -117,7 +65,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const user = await getAuthenticatedUser();
+    const user = await getAuthenticatedUser({ ensureCartItems: true });
     const body = await request.json();
     const { id, quantity } = body as { id?: string; quantity?: number };
 
@@ -137,7 +85,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     await user.save();
-    return NextResponse.json({ items: serializeCart(user.cartItems) });
+    return NextResponse.json({ items: serializeCartItems(user.cartItems) });
   } catch (error) {
     const unauthorizedResponse = handleUnauthorized(error);
     if (unauthorizedResponse) {
@@ -150,7 +98,7 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getAuthenticatedUser();
+    const user = await getAuthenticatedUser({ ensureCartItems: true });
     let itemId: string | undefined;
 
     try {
@@ -167,7 +115,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     await user.save();
-    return NextResponse.json({ items: serializeCart(user.cartItems) });
+    return NextResponse.json({ items: serializeCartItems(user.cartItems) });
   } catch (error) {
     const unauthorizedResponse = handleUnauthorized(error);
     if (unauthorizedResponse) {

@@ -1,60 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { ensureDatabaseConnection } from "@/lib/apiUtils";
-import { getAuthCookieName, verifyAuthToken } from "@/lib/auth";
-import User, { IUser, IUserCartItem } from "@/models/User";
+import { serializeCartItems } from "@/lib/api/cart";
+import { getAuthenticatedUser, handleUnauthorized } from "@/lib/api/authenticatedUser";
+import { IUserCartItem } from "@/models/User";
 import Order, { IOrder } from "@/models/Order";
-
-class UnauthorizedError extends Error {}
 
 function serializeOrder(order: Pick<IOrder, "_id" | "items" | "total" | "createdAt" | "updatedAt">) {
   return {
     id: order._id.toString(),
-    items: order.items.map((item) => ({
-      id: item.id,
-      title: item.title,
-      price: item.price,
-      quantity: item.quantity,
-      category: item.category,
-      degree: item.degree,
-      condition: item.condition,
-      description: item.description,
-    })),
+    items: serializeCartItems(order.items),
     total: order.total,
     createdAt: order.createdAt,
     updatedAt: order.updatedAt,
   };
-}
-
-async function getAuthenticatedUser(): Promise<IUser> {
-  const token = cookies().get(getAuthCookieName())?.value;
-  if (!token) {
-    throw new UnauthorizedError("Not authenticated");
-  }
-
-  let userId: string;
-  try {
-    const payload = await verifyAuthToken(token);
-    userId = payload.sub;
-  } catch {
-    throw new UnauthorizedError("Not authenticated");
-  }
-
-  await ensureDatabaseConnection();
-  const user = await User.findById(userId);
-
-  if (!user) {
-    throw new UnauthorizedError("Not authenticated");
-  }
-
-  return user;
-}
-
-function handleUnauthorized(error: unknown) {
-  if (error instanceof UnauthorizedError) {
-    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  }
-  return null;
 }
 
 function normalizeCartItemsPayload(items: any[] | undefined | null): IUserCartItem[] {
@@ -109,16 +66,7 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getAuthenticatedUser();
     let cartItems: IUserCartItem[] = Array.isArray(user.cartItems)
-      ? user.cartItems.map((item) => ({
-          id: item.id,
-          title: item.title,
-          price: item.price,
-          quantity: item.quantity,
-          category: item.category,
-          degree: item.degree,
-          condition: item.condition,
-          description: item.description,
-        }))
+      ? serializeCartItems(user.cartItems)
       : [];
 
     if (cartItems.length === 0) {
