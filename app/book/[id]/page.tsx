@@ -35,9 +35,24 @@ export default function BookDetails({ params }: { params: { id: string } }) {
   const handleIncrease = () => setQuantity((q) => q + 1);
   
   // Handle adding book to cart
-  const handleAddToCart = () => {
-    if (book && !book.error) {
-      addToCart({
+  const handleAddToCart = async () => {
+    if (!book || book.error) return;
+
+    // Require authentication before allowing add to cart
+    try {
+      const res = await fetch('/api/auth/me', { method: 'GET' });
+      if (res.status === 401) {
+        router.push('/sign-in');
+        return;
+      }
+    } catch {
+      // If auth check fails unexpectedly, route to sign-in
+      router.push('/sign-in');
+      return;
+    }
+
+    addToCart(
+      {
         id: params.id,
         title: book.title,
         price: book.price,
@@ -45,12 +60,13 @@ export default function BookDetails({ params }: { params: { id: string } }) {
         degree: book.degree,
         condition: book.condition,
         description: book.description,
-      }, quantity);
-      
-      // Show feedback to user
-      setAddedToCart(true);
-      setTimeout(() => setAddedToCart(false), 2000);
-    }
+      },
+      quantity
+    );
+
+    // Show feedback to user
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   // Generate breadcrumb items based on book data
