@@ -30,14 +30,14 @@ export const PRODUCT_TYPES = {
     name: 'Notebooks & Pads',
     breadcrumb: ['Home', 'Notebooks & Pads'],
     categoryLabel: 'Types',
-    detailRoute: '/notebook',
+    detailRoute: '/notebooks-and-pads',
     imagePrefix: '/assets/notebook'
   },
   'writing-supplies': {
     name: 'Writing Supplies',
     breadcrumb: ['Home', 'Writing Supplies'],
     categoryLabel: 'Categories',
-    detailRoute: '/writing-supply',
+    detailRoute: '/writing-supplies',
     imagePrefix: '/assets/writing'
   },
   'other': {
@@ -69,14 +69,14 @@ export function filterAndSortProducts(
 
   // Filter by selected categories
   if (selectedCategories.length > 0) {
-    filtered = filtered.filter(product => 
+    filtered = filtered.filter(product =>
       product.category && selectedCategories.includes(product.category)
     );
   }
 
   // Filter by selected conditions
   if (selectedConditions.length > 0) {
-    filtered = filtered.filter(product => 
+    filtered = filtered.filter(product =>
       product.condition && selectedConditions.includes(product.condition)
     );
   }
@@ -86,7 +86,7 @@ export function filterAndSortProducts(
     filtered = filtered.filter(product => {
       const productYear = product.year;
       if (!productYear) return false;
-      
+
       return selectedYears.some(selectedYear => {
         const yearNumber = extractYearNumber(selectedYear);
         return productYear === yearNumber;
@@ -101,7 +101,7 @@ export function filterAndSortProducts(
 // Separate sorting function for better testability and reusability
 export function sortProducts(products: Product[], sortBy: SortOption): Product[] {
   const sortedProducts = [...products]; // Create a copy to avoid mutating original array
-  
+
   switch (sortBy) {
     case "Alphabetically, A-Z":
       return sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
@@ -133,12 +133,12 @@ export function paginateProducts(products: Product[], currentPage: number, items
   if (!products || products.length === 0) {
     return [];
   }
-  
+
   if (currentPage < 1 || itemsPerPage < 1) {
     console.warn('Invalid pagination parameters: page and itemsPerPage must be positive');
     return products;
   }
-  
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   return products.slice(startIndex, endIndex);
@@ -173,12 +173,12 @@ export interface DatabaseProduct {
 // Handles optional fields and provides fallback image paths
 export function transformDatabaseProduct(product: DatabaseProduct, productType: ProductType): Product {
   const config = getProductTypeConfig(productType);
-  
+
   // Validate required fields
   if (!product.id || !product.title || typeof product.price !== 'number') {
     throw new Error('Invalid product data: missing required fields (id, title, or price)');
   }
-  
+
   return {
     id: product.id,
     title: product.title,
@@ -209,7 +209,7 @@ export const engineeringMajors = [
 // Updated categories based on the schema requirements
 export const notebookTypes = [
   "A4 Pads",
-  "A5 Pads", 
+  "A5 Pads",
   "Dot Grid",
   "Hardcover Notebooks",
   "Softcover Notebooks",
@@ -241,7 +241,7 @@ export const otherTypes = [
 // Additional degree options for coursebooks
 export const additionalDegrees = [
   "Arts",
-  "Business and Economics", 
+  "Business and Economics",
   "Creative Arts and Industries",
   "Education and Social Work",
   "Law",
