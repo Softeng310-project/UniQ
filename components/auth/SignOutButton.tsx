@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/contexts/CartContext";
 
 export default function SignOutButton() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { resetCart } = useCart();
 
   const handleSignOut = async () => {
     setLoading(true);
@@ -21,6 +23,7 @@ export default function SignOutButton() {
         throw new Error("Unable to sign out. Please try again.");
       }
 
+      resetCart();
       router.push("/sign-in");
       router.refresh();
     } catch (err) {

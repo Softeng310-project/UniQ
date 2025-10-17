@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/contexts/CartContext";
 
 type StatusState = {
   type: "success" | "error";
@@ -30,6 +31,7 @@ export default function SignInPage() {
   const [signUpStatus, setSignUpStatus] = useState<StatusState>(null);
   const [signInLoading, setSignInLoading] = useState(false);
   const [signUpLoading, setSignUpLoading] = useState(false);
+  const { refreshCart } = useCart();
 
   const handleSignInSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,6 +56,7 @@ export default function SignInPage() {
 
       setSignInStatus({ type: "success", message: data.message || "Signed in successfully." });
       setSignInForm(initialSignInForm);
+      await refreshCart();
       router.push("/account");
       router.refresh();
     } catch (error) {
