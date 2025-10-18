@@ -1,5 +1,12 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  ReactNode,
+} from 'react';
 
 // Define the structure of a cart item
 export interface CartItem {
@@ -16,16 +23,45 @@ export interface CartItem {
 // Define the shape of the cart context
 interface CartContextType {
   items: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>, quantity: number) => void;
-  removeFromCart: (id: string) => void;
-  updateQuantity: (id: string, quantity: number) => void;
-  clearCart: () => void;
+  isLoading: boolean;
+  addToCart: (item: Omit<CartItem, 'quantity'>, quantity: number) => Promise<void>;
+  removeFromCart: (id: string) => Promise<void>;
+  updateQuantity: (id: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
+  refreshCart: () => Promise<void>;
+  resetCart: () => void;
   getCartTotal: () => number;
   getCartCount: () => number;
 }
 
 // Create the context with a default value
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+function parseError(response: Response, fallback: string) {
+  return response
+    .json()
+    .then((data) => (data?.error as string) || fallback)
+    .catch(() => fallback);
+}
+
+function normalizeItems(items: any[]): CartItem[] {
+  if (!Array.isArray(items)) {
+    return [];
+  }
+
+  return items
+    .map((item) => ({
+      id: String(item?.id ?? ''),
+      title: String(item?.title ?? ''),
+      price: Number(item?.price ?? 0),
+      quantity: Math.max(0, Number(item?.quantity ?? 0)),
+      category: item?.category ? String(item.category) : undefined,
+      degree: item?.degree ? String(item.degree) : undefined,
+      condition: item?.condition ? String(item.condition) : undefined,
+      description: item?.description ? String(item.description) : undefined,
+    }))
+    .filter((item) => item.id && item.title && item.quantity > 0);
+}
 
 // Custom hook to use the cart context
 export function useCart() {
@@ -39,96 +75,153 @@ export function useCart() {
 // Cart provider component to wrap the application
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem('cart');
-      if (savedCart) {
-        setItems(JSON.parse(savedCart));
-      }
-    } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
+  const setItemsFromResponse = useCallback(async (response: Response, fallbackMessage: string) => {
+    if (response.status === 401) {
+      setItems([]);
+      throw new Error('Not authenticated');
     }
-    setIsLoaded(true);
+
+    if (!response.ok) {
+      const message = await parseError(response, fallbackMessage);
+      throw new Error(message);
+    }
+
+    const data = await response.json();
+    setItems(normalizeItems(data?.items));
   }, []);
 
-  // Save cart to localStorage whenever it changes
+  const refreshCart = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (response.status === 401) {
+        setItems([]);
+        return;
+      }
+
+      if (!response.ok) {
+        const message = await parseError(response, 'Unable to load cart.');
+        throw new Error(message);
+      }
+
+      const data = await response.json();
+      setItems(normalizeItems(data?.items));
+    } catch (error) {
+      console.error('Error loading cart:', error);
+      setItems([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
-    if (isLoaded) {
+    void refreshCart();
+  }, [refreshCart]);
+
+  const addToCart = useCallback(
+    async (item: Omit<CartItem, 'quantity'>, quantity: number) => {
       try {
-        localStorage.setItem('cart', JSON.stringify(items));
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ item, quantity }),
+        });
+
+        await setItemsFromResponse(response, 'Unable to add item to cart.');
       } catch (error) {
-        console.error('Error saving cart to localStorage:', error);
+        console.error('Error adding to cart:', error);
+        throw error;
       }
-    }
-  }, [items, isLoaded]);
+    },
+    [setItemsFromResponse]
+  );
 
-  // Add item to cart or update quantity if already exists
-  const addToCart = (item: Omit<CartItem, 'quantity'>, quantity: number) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      
-      if (existingItem) {
-        // Item already in cart, update quantity
-        return prevItems.map((i) =>
-          i.id === item.id
-            ? { ...i, quantity: i.quantity + quantity }
-            : i
-        );
-      } else {
-        // New item, add to cart
-        return [...prevItems, { ...item, quantity }];
+  const removeFromCart = useCallback(
+    async (id: string) => {
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ id }),
+        });
+
+        await setItemsFromResponse(response, 'Unable to remove item from cart.');
+      } catch (error) {
+        console.error('Error removing from cart:', error);
+        throw error;
       }
-    });
-  };
+    },
+    [setItemsFromResponse]
+  );
 
-  // Remove item from cart
-  const removeFromCart = (id: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
+  const updateQuantity = useCallback(
+    async (id: string, quantity: number) => {
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ id, quantity }),
+        });
 
-  // Update item quantity
-  const updateQuantity = (id: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-      return;
+        await setItemsFromResponse(response, 'Unable to update cart item.');
+      } catch (error) {
+        console.error('Error updating cart:', error);
+        throw error;
+      }
+    },
+    [setItemsFromResponse]
+  );
+
+  const clearCart = useCallback(async () => {
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      await setItemsFromResponse(response, 'Unable to clear cart.');
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      throw error;
     }
-    
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    );
-  };
+  }, [setItemsFromResponse]);
 
-  // Clear all items from cart
-  const clearCart = () => {
+  const resetCart = useCallback(() => {
     setItems([]);
-  };
+    setIsLoading(false);
+  }, []);
 
   // Calculate total price of all items in cart
-  const getCartTotal = () => {
+  const getCartTotal = useCallback(() => {
     return items.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
+  }, [items]);
 
   // Get total number of items in cart
-  const getCartCount = () => {
+  const getCartCount = useCallback(() => {
     return items.reduce((count, item) => count + item.quantity, 0);
-  };
+  }, [items]);
 
   const value: CartContextType = {
     items,
+    isLoading,
     addToCart,
     removeFromCart,
     updateQuantity,
     clearCart,
+    refreshCart,
+    resetCart,
     getCartTotal,
     getCartCount,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
-
-

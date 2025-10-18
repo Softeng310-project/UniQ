@@ -1,12 +1,11 @@
-import CartPage from '@/components/cart/CartPage';
+import CheckoutPage from '@/components/cart/CheckoutPage';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getAuthCookieName, verifyAuthToken } from '@/lib/auth';
 
-// Cart page route (protected: requires sign-in)
-export default async function Cart() {
-  const cookieStore = cookies();
-  const token = cookieStore.get(getAuthCookieName())?.value;
+// Checkout confirmation page (protected)
+export default async function Checkout() {
+  const token = cookies().get(getAuthCookieName())?.value;
 
   if (!token) {
     redirect('/sign-in');
@@ -18,6 +17,6 @@ export default async function Cart() {
     redirect('/sign-in');
   }
 
-  return <CartPage />;
+  return <CheckoutPage />;
 }
 
