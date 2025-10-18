@@ -6,6 +6,7 @@ import { MdAccountCircle, MdOutlineShoppingCart, MdClose, MdOutlineSearch } from
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useCart } from "../../contexts/CartContext";
+import { useRouter } from "next/navigation";
 
 // ============================================================================
 // TYPES & INTERFACES
@@ -159,13 +160,38 @@ const getTabClassName = (isActive: boolean): string => {
 export function SearchBar() {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
+  const router = useRouter();
 
   const isActive = focused || value.length > 0;
 
+  const handleSearch = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    
+    if (value.trim()) {
+      router.push(`/search?q=${encodeURIComponent(value.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleClear = () => {
+    setValue("");
+  };
+
   return (
-    <div className="flex items-center w-64 gap-2">
-      <MdOutlineSearch size={22} className="text-white shrink-0" />
-      
+    <form onSubmit={handleSearch} className="flex items-center w-64 gap-2">
+      <button 
+        type="submit" 
+        aria-label="Search"
+        className="shrink-0 hover:opacity-80 transition-opacity"
+      >
+        <MdOutlineSearch size={22} className="text-white" />
+      </button>
+        
       <div
         className={`flex items-center w-full rounded px-2 -translate-x-2 py-1 transition-colors ${
           isActive ? "bg-white text-black" : "bg-transparent text-white"
@@ -197,27 +223,27 @@ export function SearchBar() {
         ) : (
           <span aria-hidden className="p-1 w-[22px]" />
         )}
-      </div>
-    </div>
-  );
-}
+        </div>
+      </form>
+    );
+  }
 
-/**
- * Logo component for the top navigation bar
- */
-function Logo() {
-  return (
-    <div className="absolute left-1/2 -translate-x-1/2">
-      <Link href="/" passHref>
-        <Image
-          src="/assets/UniQ.webp"
-          alt="UniQ Logo"
-          width={100}
-          height={100}
-          style={{ pointerEvents: "none" }}
-        />
-      </Link>
-    </div>
+  /**
+   * Logo component for the top navigation bar
+   */
+  function Logo() {
+    return (
+      <div className="absolute left-1/2 -translate-x-1/2">
+        <Link href="/" passHref>
+          <Image
+            src="/assets/UniQ.webp"
+            alt="UniQ Logo"
+            width={100}
+            height={100}
+            style={{ pointerEvents: "none" }}
+          />
+        </Link>
+      </div>
   );
 }
 
