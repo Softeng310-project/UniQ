@@ -11,10 +11,10 @@ If you find a bug within the codebase, complete the following steps:
 1. Search for **[existing issues](https://github.com/Softeng310-project/UniQ/issues)** and make sure the bug has not already been reported.
 
 2. If not found, **[create a new issue](https://github.com/Softeng310-project/UniQ/issues/new)** and include the following:
-    - A short paragraph **clearly and concisely** describing the problem.
-    - Steps to reproduce the bug.
-    - Screenshots of the bug (if applicable).
-    - Your software environment (browser, OS, etc.).
+   - A short paragraph **clearly and concisely** describing the problem.
+   - Steps to reproduce the bug.
+   - Screenshots of the bug (if applicable).
+   - Your software environment (browser, OS, etc.).
 
 Please make sure you stay up to date on any issues you create as others will likely be commenting on them for follow up questions etc.
 
@@ -25,14 +25,14 @@ Bring your bright ideas to life! When suggesting a feature:
 1. **[Open a feature request issue](https://github.com/Softeng310-project/UniQ/issues/new?labels=enhancement)**.
 
 2. Include the following in your description:
-    - A **clear and concise** description of the feature.
-    - What problem(s) the feature would solve.
-    - How this feature would interact and work within the app (examples, screenshots, illustrations, etc.).
-    - Why it would improve the project.
+   - A **clear and concise** description of the feature.
+   - What problem(s) the feature would solve.
+   - How this feature would interact and work within the app (examples, screenshots, illustrations, etc.).
+   - Why it would improve the project.
 
 We heavily encourage you to be creative, bring out your wild side when suggesting!
 
-## Setting Up! 
+## Setting Up!
 
 To get yourself set up and be able to contribute to UniQ, follow these steps:
 
@@ -42,15 +42,22 @@ To get yourself set up and be able to contribute to UniQ, follow these steps:
 
 3. Set the **upstream** as the original repository with:
 
-    `git remote add upstream https://github.com/Softeng310-project/UniQ.git`
+   `git remote add upstream https://github.com/Softeng310-project/UniQ.git`
 
 4. Install dependencies with:
 
-    `npm install`
+   `npm install`
 
-5. Run the server with:
+5. Copy the example environment file and add your MongoDB URI plus an `AUTH_JWT_SECRET`:
 
-    `npm run dev`
+   ```bash
+   cp .env.example .env
+   # then edit .env to add your values
+   ```
+
+6. Run the development server with:
+
+   `npm run dev`
 
 ## Pull Requests!
 
@@ -61,13 +68,14 @@ Before making any changes to your code:
 
 Once you have made your changes:
 
-- Make sure the code works and the project works as intended.
+- Make sure the app builds and runs locally.
+- Run `npm run test` and add/update tests when behaviour changes.
 - Commit using a short descriptive message: `git commit -m "added feature for the Navigation Bar"`.
 - Push to your forked repository with: `git push origin <type>/<short-descriptive-name>`.
 - Make a pull request on your forked repository.
 - Add additional details within the description of the Pull Request and make sure to **reference the ticket number** that the Pull Request solves. For example, **"added x feature, this completes ticket #42"**.
 
-## Accepted Contributions? 
+## Accepted Contributions?
 
 Confused if your contributions are allowed or not? Here are a few types of **accepted contributions**:
 
@@ -93,15 +101,17 @@ To accodomate all our wonderful contributors and their different skill levels, w
 
 ### 1. Code Style
 
-To keep this requirement simple, we have decided to make use of **Sonar** (SonarLint, SonarQube, and SonarCloud) to make sure our codebase adheres to conventional code styles. Thus, please make sure you are using SonarLint within your desired IDE while making contributions.
+- Write TypeScript following Next.js best practices.
 
-### 2. Code Vulnerabilities.
+### 2. Testing
 
-To make sure that UniQ has as little vulnerabilities within it as possible, all contributors are required to be using **Snyk** within their desired IDEs. These should be available as simple plugins on these IDEs; JetBrains IDEs, Visual Studio, VS Code, Eclipse.
+- To make sure that UniQ has as little vulnerabilities within it as possible, all contributors are required to be using **Snyk** within their desired IDEs. These should be available as simple plugins on these IDEs; JetBrains IDEs, Visual Studio, VS Code, Eclipse.
+- We use Jest and React Testing Library for unit and integration tests.
+- Add or update tests alongside your changes and run `npm run test` locally.
 
 ### 3. Documentation
 
-If any changes you made to the codebase causes the project's behaviour to change, you are required to document this behaviour in the **[README.md](README.md)** file.
+- If any changes you made to the codebase causes the project's behaviour to change, you are required to document this behaviour in the **[README.md](README.md)** file.
 
 ## Vision!
 
@@ -112,7 +122,7 @@ We would like to be able to get UniQ up and running before the start of the **20
 ### Front-End:
 
 - React
-- Next.js 14 
+- Next.js 14
 - TypeScript
 - Tailwind CSS
 
@@ -139,6 +149,18 @@ Minseo: mkim719@aucklanduni.ac.nz
 Muhammad: mmoh314@aucklanduni.ac.nz
 
 Nathan: ntur101@aucklanduni.ac.nz
+
+Eddie: hkim807@aucklanduni.ac.nz
+
+Caleb: cjun818@aucklanduni.ac.nz
+
+Lucas: ljun123@aucklanduni.ac.nz
+
+Jaeha: jcha513@aucklanduni.ac.nz
+
+Andrew: ajeo563@aucklanduni.ac.nz
+
+Kevin: kkim985@aucklanduni.ac.nz
 
 ## Thank You!
 
