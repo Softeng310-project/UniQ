@@ -32,6 +32,8 @@ export default function ProductDetail({
     const [product, setProduct] = useState<any>(null);
     const [quantity, setQuantity] = useState<number>(1);
     const [addedToCart, setAddedToCart] = useState<boolean>(false);
+    const [adding, setAdding] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
     const { addToCart } = useCart();
     const router = useRouter();
 
@@ -56,9 +58,30 @@ export default function ProductDetail({
     const handleIncrease = () => setQuantity((q) => q + 1);
 
     // Handle adding product to cart
-    const handleAddToCart = () => {
-        if (product && !product.error) {
-            addToCart(
+    const handleAddToCart = async () => {
+        if (!product || product.error || adding) {
+            return;
+        }
+
+        setError(null);
+        setAdding(true);
+
+        // Require authentication before allowing add to cart
+        try {
+            const res = await fetch('/api/auth/me', { method: 'GET', credentials: 'include' });
+            if (res.status === 401) {
+                router.push('/sign-in');
+                setAdding(false);
+                return;
+            }
+        } catch {
+            router.push('/sign-in');
+            setAdding(false);
+            return;
+        }
+
+        try {
+            await addToCart(
                 {
                     id: productId,
                     title: product.title,
@@ -72,6 +95,15 @@ export default function ProductDetail({
             // Show feedback to user
             setAddedToCart(true);
             setTimeout(() => setAddedToCart(false), 2000);
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Unable to add item to cart.';
+            if (message === 'Not authenticated') {
+                router.push('/sign-in');
+            } else {
+                setError(message);
+            }
+        } finally {
+            setAdding(false);
         }
     };
 
@@ -143,11 +175,13 @@ export default function ProductDetail({
                                 className={`ml-4 w-[550px] h-[38px] px-8 border border-gray-300 text-lg rounded transition text-center flex items-center justify-center ${addedToCart
                                     ? "bg-green-500 text-white"
                                     : "bg-orange-100 text-gray-700 hover:bg-orange-200"
-                                    }`}
+                                    } ${adding ? "opacity-70 cursor-not-allowed" : ""}`}
+                                disabled={adding}
                             >
                                 {addedToCart ? "✓ ADDED TO CART" : "ADD TO CART"}
                             </button>
                         </div>
+                        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
                         <hr className="my-6" />
 
                         {/* Description */}
